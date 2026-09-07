@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="app-version" content="1.2.0">
+  <meta name="app-version" content="1.3.0">
   
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -259,6 +259,12 @@
       word-break: break-word;
     }
 
+    .prop-badge.ion-badge {
+      background-color: #ebf8ff;
+      color: #2b6cb0;
+      border: 1px solid #bee3f8;
+    }
+
     .count-info {
       text-align: right;
       margin-bottom: 4px;
@@ -432,7 +438,7 @@
 
   <div class="header-container">
     <h1>酸塩基暗記倶楽部</h1>
-    <span class="version-badge" id="versionBadge">v1.2.0</span>
+    <span class="version-badge" id="versionBadge">v1.3.0</span>
   </div>
 
   <div class="main-module-tabs">
@@ -470,6 +476,7 @@
     <select id="qaTypeAcidBase" class="hidden">
       <option value="nameToFormula">出題: 名称 ➔ 答: 化学式</option>
       <option value="formulaToName">出題: 化学式 ➔ 答: 名称</option>
+      <option value="checkIonization">出題: 名称・化学式 ➔ 答: 電離の式</option>
       <option value="checkStrength">出題: 名称・化学式 ➔ 答: 強弱</option>
       <option value="checkVolatility">出題: 名称・化学式 ➔ 答: 揮発性</option>
     </select>
@@ -534,7 +541,7 @@
   // ==========================================
   // バージョン管理設定
   // ==========================================
-  const CURRENT_VERSION = "1.2.0";
+  const CURRENT_VERSION = "1.3.0";
   const STORAGE_KEY_VERSION = "acid_base_app_version";
 
   function checkVersionUpdate() {
@@ -552,7 +559,7 @@
       versionNotice.classList.remove("hidden");
     } else if (savedVersion !== CURRENT_VERSION) {
       versionNoticeTitle.textContent = "アプリが更新されました！";
-      versionNoticeDetail.textContent = `v${savedVersion} から v${CURRENT_VERSION} にアップデートされました（モード3: 酸化物 追加）。`;
+      versionNoticeDetail.textContent = `v${savedVersion} から v${CURRENT_VERSION} にアップデートされました（モード1に「電離の式」を追加）。`;
       versionNotice.classList.remove("hidden");
     }
 
@@ -563,117 +570,145 @@
   }
 
   // ==========================================
-  // モード1：酸・塩基 データベース
+  // モード1：酸・塩基 データベース（電離の式を追加）
   // ==========================================
   const acidBaseData = [
     {
       id: 1, name: "硝酸", formula: "HNO₃", type: "酸", strength: "強酸", volatility: "揮発性",
+      ionization: "HNO₃ → H⁺ + NO₃⁻",
       comments: {
         basic: "無色の液体。酸化剤にもなる。",
+        ionization: "電離して硝酸イオン（NO₃⁻）を生じます。硝酸塩（AgNO₃やKNO₃など）を理解する基礎になります。",
         strength: "強酸と言えば『しょう・りゅう・えん（硝酸・硫酸・塩酸）』の『しょう』。",
         volatility: "沸点が低く（83℃）、日光や加熱で分解して気体（NO₂）を発生するため揮発性。"
       }
     },
     {
       id: 2, name: "塩酸", formula: "HCl", type: "酸", strength: "強酸", volatility: "揮発性",
+      ionization: "HCl → H⁺ + Cl⁻",
       comments: {
         basic: "塩化水素 HCl（気体）の水溶液。強酸の代表例。",
+        ionization: "電離して塩化物イオン（Cl⁻）を生じます。Ag⁺ と出会うと AgCl（白色沈殿）を作ります。",
         strength: "強酸と言えば『しょう・りゅう・えん』の『えん』。",
         volatility: "気体（塩化水素）の水溶液なので加熱すると気体が逃げやすい、つまり揮発性。"
       }
     },
     {
       id: 3, name: "硫酸", formula: "H₂SO₄", type: "酸", strength: "強酸", volatility: "不揮発性",
+      ionization: "H₂SO₄ → 2H⁺ + SO₄²⁻",
       comments: {
         basic: "2価の強酸。濃硫酸を加熱すると酸化剤になる。",
+        ionization: "1分子から H⁺ が2個出ます。硫酸イオン（SO₄²⁻）は Ba²⁺ や Ca²⁺ と沈殿を作ります。",
         strength: "強酸と言えば『しょう・りゅう・えん』の『りゅう』。",
         volatility: "沸点が非常に高い（約338℃）ため不揮発性。"
       }
     },
     {
       id: 4, name: "リン酸", formula: "H₃PO₄", type: "酸", strength: "中程度の酸", volatility: "不揮発性",
+      ionization: "H₃PO₄ ⇄ 3H⁺ + PO₄³⁻ （多段階電離）",
       comments: {
         basic: "3価の酸。",
+        ionization: "3段階で電離し、リン酸イオン（PO₄³⁻）を生じます。",
         strength: "電離度は強酸ほど高くなく、弱酸よりは高いため『中程度の酸』とされる。",
         volatility: "沸点が高く常温で結晶（固体）として存在するため不揮発性。"
       }
     },
     {
       id: 5, name: "酢酸", formula: "CH₃COOH", type: "酸", strength: "弱酸", volatility: "揮発性",
+      ionization: "CH₃COOH ⇄ CH₃COO⁻ + H⁺",
       comments: {
         basic: "食酢の成分。",
-        strength: "弱酸の代表例。実は炭酸よりは強い。",
+        ionization: "末尾の H のみが H⁺ として離脱し、酢酸イオン（CH₃COO⁻）になります。",
+        strength: "弱酸の代表例。大部分は分子のまま存在します（電離度が小さい）。",
         volatility: "酢はにおいますよね。におうということは揮発性。"
       }
     },
     {
       id: 6, name: "フッ化水素酸", formula: "HF", type: "酸", strength: "弱酸", volatility: "揮発性",
+      ionization: "HF ⇄ H⁺ + F⁻",
       comments: {
         basic: "ガラス（SiO₂）を侵す唯一の酸。",
+        ionization: "フッ化物イオン（F⁻）を生じます。Ca²⁺ と出会うと CaF₂（白色沈殿）になります。",
         strength: "ハロゲン化水素（HCl, HBr, HI）の中でHFだけが水素結合のため弱酸。",
         volatility: "沸点が低い（20℃）、つまり気体になりやすいため揮発性。"
       }
     },
     {
       id: 7, name: "炭酸", formula: "H₂CO₃", type: "酸", strength: "弱酸", volatility: "揮発性",
+      ionization: "H₂CO₃ ⇄ 2H⁺ + CO₃²⁻ （2段階電離）",
       comments: {
         basic: "二酸化炭素（気体）が水に溶けた弱酸。",
+        ionization: "炭酸水素イオン（HCO₃⁻）を経て炭酸イオン（CO₃²⁻）になります。",
         strength: "弱酸の代表例。ただしフェノールより強い。",
         volatility: "気体（CO₂）の水溶液なので加熱すると気体が逃げやすい、つまり揮発性。"
       }
     },
     {
       id: 8, name: "硫化水素", formula: "H₂S", type: "酸", strength: "弱酸", volatility: "揮発性",
+      ionization: "H₂S ⇄ 2H⁺ + S²⁻ （2段階電離）",
       comments: {
         basic: "腐卵臭（腐った卵のにおい）のする気体。",
-        strength: "弱酸。陽イオンを沈殿させる目的でよく出てくる。",
+        ionization: "硫化物イオン（S²⁻）を生じ、各種金属イオン（Cu²⁺, Zn²⁺など）と様々な色の沈殿を作ります。",
+        strength: "弱酸。陽イオンを沈殿させる目的でよく登場します。",
         volatility: "気体の水溶液なので加熱すると気体が逃げやすい、つまり揮発性。"
       }
     },
     {
       id: 9, name: "シュウ酸", formula: "H₂C₂O₄", type: "酸", strength: "弱酸", volatility: "不揮発性",
+      ionization: "H₂C₂O₄ ⇄ 2H⁺ + C₂O₄²⁻",
       comments: {
         basic: "（COOH）₂ とも表記される。還元剤にもなる。",
-        strength: "弱酸。よく中和滴定の標準溶液として登場する。",
+        ionization: "シュウ酸イオン（C₂O₄²⁻）を生じます。Ca²⁺ と沈殿を作ります。",
+        strength: "弱酸。よく中和滴定の標準溶液として登場します。",
         volatility: "常温で固体の結晶のため不揮発性。"
       }
     },
     {
       id: 10, name: "水酸化カリウム", formula: "KOH", type: "塩基", strength: "強塩基", volatility: "不揮発性",
+      ionization: "KOH → K⁺ + OH⁻",
       comments: {
         basic: "強塩基の代表例。",
+        ionization: "カリウムイオン（K⁺）と水酸化物イオン（OH⁻）に完全電離します。",
         strength: "アルカリ金属（1族）の水酸化物はすべて強塩基。",
         volatility: "イオン結合のため少々加熱しても液体・気体にならない。不揮発性。"
       }
     },
     {
       id: 11, name: "水酸化ナトリウム", formula: "NaOH", type: "塩基", strength: "強塩基", volatility: "不揮発性",
+      ionization: "NaOH → Na⁺ + OH⁻",
       comments: {
         basic: "強塩基の代表例。",
+        ionization: "ナトリウムイオン（Na⁺）と水酸化物イオン（OH⁻）に完全電離します。",
         strength: "アルカリ金属（1族）の水酸化物はすべて強塩基。",
         volatility: "イオン結合のため少々加熱しても液体・気体にならない。不揮発性。"
       }
     },
     {
       id: 12, name: "水酸化カルシウム", formula: "Ca(OH)₂", type: "塩基", strength: "強塩基", volatility: "不揮発性",
+      ionization: "Ca(OH)₂ → Ca²⁺ + 2OH⁻",
       comments: {
         basic: "消石灰とも呼ばれる。水溶液は『石灰水』。",
+        ionization: "カルシウムイオン（Ca²⁺）1個と OH⁻ 2個に電離します。",
         strength: "アルカリ土類金属のCa以下（Ca, Sr, Ba）の水酸化物は強塩基。",
         volatility: "イオン結合のため少々加熱しても液体・気体にならない。不揮発性。"
       }
     },
     {
       id: 13, name: "水酸化バリウム", formula: "Ba(OH)₂", type: "塩基", strength: "強塩基", volatility: "不揮発性",
+      ionization: "Ba(OH)₂ → Ba²⁺ + 2OH⁻",
       comments: {
         basic: "CO₂と反応して白色沈殿（BaCO₃）を生じる。",
+        ionization: "バリウムイオン（Ba²⁺）1個と OH⁻ 2個に電離します。",
         strength: "アルカリ土類金属のCa以下（Ca, Sr, Ba）の水酸化物は強塩基。",
         volatility: "イオン結合のため少々加熱しても液体・気体にならない。不揮発性。"
       }
     },
     {
       id: 14, name: "アンモニア", formula: "NH₃", type: "塩基", strength: "弱塩基", volatility: "揮発性",
+      ionization: "NH₃ + H₂O ⇄ NH₄⁺ + OH⁻",
       comments: {
         basic: "刺激臭を持つ気体。",
+        ionization: "水分子から H⁺ を受け取ってアンモニウムイオン（NH₄⁺）と OH⁻ になります。",
         strength: "弱塩基の代表例。",
         volatility: "気体の水溶液なので加熱すると気体が逃げやすい、つまり揮発性。"
       }
@@ -977,7 +1012,8 @@
       return data.filter(item => {
         const matchCat = (selectedCategory === "ALL" || item.type === selectedCategory);
         const matchKey = (item.name.toLowerCase().includes(keyword) ||
-                          item.formula.toLowerCase().includes(keyword));
+                          item.formula.toLowerCase().includes(keyword) ||
+                          (item.ionization && item.ionization.toLowerCase().includes(keyword)));
         return matchCat && matchKey;
       });
     } else if (activeModule === "salt") {
@@ -1017,6 +1053,7 @@
           <div class="card-name">${item.name}</div>
           <div class="card-formula">${item.formula}</div>
           <div class="card-props">
+            <span class="prop-badge ion-badge">電離: ${item.ionization}</span>
             <span class="prop-badge">${item.strength}</span>
             <span class="prop-badge">${item.volatility}</span>
           </div>
@@ -1061,7 +1098,6 @@
   function resetQaDeck() {
     let filtered = getFilteredData();
 
-    // モード2かつ「液性チェック」選択時、askPH: false の問題を除外
     if (activeModule === "salt" && qaTypeSalt.value === "checkPH") {
       filtered = filtered.filter(item => item.askPH !== false);
     }
@@ -1149,6 +1185,11 @@
         qSub = "この化学式の物質名は？";
         aText = currentQaItem.name;
         cText = currentQaItem.comments.basic;
+      } else if (qaType === "checkIonization") {
+        qTitle = `${currentQaItem.name} ${currentQaItem.formula}`;
+        qSub = "この物質の水溶液中での電離の式は？";
+        aText = currentQaItem.ionization;
+        cText = currentQaItem.comments.ionization;
       } else if (qaType === "checkStrength") {
         qTitle = `${currentQaItem.name} ${currentQaItem.formula}`;
         qSub = "この物質の強弱（電離度）は？";

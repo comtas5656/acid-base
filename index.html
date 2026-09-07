@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="app-version" content="1.1.0">
+  <meta name="app-version" content="1.1.1">
   
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 
-  <title>酸塩基暗記倶楽部</title>
+  <title>酸・塩基・塩 暗記倶楽部</title>
 
+  <!-- アイコン・Manifest設定 -->
   <link rel="icon" href="icon.png" type="image/png">
   <link rel="apple-touch-icon" href="icon.png">
+  <link rel="manifest" href="manifest.json">
 
+  <!-- iOS 用設定 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="酸塩基暗記">
@@ -38,22 +41,22 @@
       background-color: var(--bg-color);
       color: var(--text-color);
       margin: 0;
-      padding: 10px;
-      line-height: 1.5;
+      padding: 6px;
+      line-height: 1.4;
     }
 
     /* バージョン更新通知バナー */
     .version-notice {
       background: linear-gradient(135deg, #d35400, #e67e22);
       color: #ffffff;
-      padding: 10px 14px;
+      padding: 8px 12px;
       border-radius: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .version-notice-content {
@@ -64,17 +67,17 @@
 
     .version-notice-title {
       font-weight: bold;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .version-notice-close {
       background: rgba(255, 255, 255, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.4);
       color: #ffffff;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 11px;
       white-space: nowrap;
       transition: background 0.2s;
     }
@@ -91,49 +94,49 @@
 
     .header-container {
       text-align: center;
-      margin: 5px 0 10px 0;
+      margin: 2px 0 6px 0;
     }
 
     h1 {
       display: inline-block;
       color: var(--primary-color);
       margin: 0;
-      font-size: 20px;
+      font-size: 17px;
     }
 
     .version-badge {
       display: inline-block;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: bold;
       color: #7f8c8d;
       background-color: #e2e8f0;
-      padding: 2px 6px;
+      padding: 1px 5px;
       border-radius: 10px;
-      margin-left: 6px;
+      margin-left: 4px;
       vertical-align: middle;
     }
 
-    /* メイン学習モード切替 (モード1 / モード2) */
+    /* メイン学習モード切替 (コンパクト化) */
     .main-module-tabs {
       display: flex;
       justify-content: center;
-      gap: 6px;
-      margin-bottom: 10px;
+      gap: 4px;
+      margin-bottom: 6px;
       background-color: #edf2f7;
-      padding: 4px;
-      border-radius: 8px;
+      padding: 3px;
+      border-radius: 6px;
     }
 
     .module-btn {
       flex: 1;
-      max-width: 240px;
-      padding: 8px 12px;
+      max-width: 220px;
+      padding: 5px 8px;
       border: none;
       background-color: transparent;
       color: #4a5568;
       font-weight: bold;
-      font-size: 13px;
-      border-radius: 6px;
+      font-size: 12px;
+      border-radius: 4px;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -141,25 +144,25 @@
     .module-btn.active {
       background-color: var(--primary-color);
       color: #ffffff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
-    /* 表示モード切替 (一覧 / 1問1答) */
+    /* 表示モード切替 (コンパクト化) */
     .mode-tabs {
       display: flex;
       justify-content: center;
-      gap: 8px;
-      margin-bottom: 10px;
+      gap: 6px;
+      margin-bottom: 6px;
     }
 
     .tab-btn {
-      padding: 6px 14px;
-      border: 2px solid var(--secondary-color);
+      padding: 4px 12px;
+      border: 1.5px solid var(--secondary-color);
       background-color: #fff;
       color: var(--secondary-color);
       font-weight: bold;
-      font-size: 13px;
-      border-radius: 20px;
+      font-size: 12px;
+      border-radius: 16px;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -171,17 +174,17 @@
 
     .controls {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 8px;
-      margin-bottom: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 6px;
+      margin-bottom: 8px;
       width: 100%;
     }
 
     select, input {
-      padding: 6px 10px;
+      padding: 5px 8px;
       border: 1px solid #ccc;
       border-radius: 6px;
-      font-size: 13px;
+      font-size: 12px;
       width: 100%;
       background-color: #fff;
       cursor: pointer;
@@ -189,8 +192,8 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px;
       width: 100%;
     }
 
@@ -198,8 +201,8 @@
       background-color: var(--card-bg);
       border-radius: 8px;
       border: 1px solid var(--border-color);
-      padding: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      padding: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -208,13 +211,13 @@
 
     .card-category {
       display: inline-block;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: bold;
       color: #fff;
       background-color: var(--secondary-color);
-      padding: 2px 8px;
+      padding: 2px 6px;
       border-radius: 4px;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .card-category.salt {
@@ -222,29 +225,29 @@
     }
 
     .card-name {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
       color: var(--primary-color);
     }
 
     .card-formula {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
       color: #27ae60;
-      margin: 4px 0;
+      margin: 2px 0;
     }
 
     .card-props {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 6px;
-      margin-top: 6px;
-      font-size: 12px;
+      gap: 4px;
+      margin-top: 4px;
+      font-size: 11px;
     }
 
     .prop-badge {
-      padding: 2px 8px;
+      padding: 1px 6px;
       border-radius: 4px;
       background-color: #edf2f7;
       color: #4a5568;
@@ -253,18 +256,18 @@
 
     .count-info {
       text-align: right;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       color: #666;
-      font-size: 12px;
+      font-size: 11px;
     }
 
-    /* 1問1答モード用スタイル */
+    /* 1問1答モード用スタイル（コンパクト化） */
     .qa-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 100%;
-      padding-bottom: 90px;
+      padding-bottom: 80px;
     }
 
     .qa-card {
@@ -272,13 +275,13 @@
       max-width: 480px;
       background-color: #fff;
       border: 2px solid var(--secondary-color);
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
       text-align: center;
       cursor: pointer;
       user-select: none;
-      min-height: 250px;
+      min-height: 210px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -295,83 +298,83 @@
     }
 
     .qa-question-title {
-      font-size: 22px;
+      font-size: 19px;
       font-weight: bold;
       color: var(--primary-color);
     }
 
     .qa-question-sub {
-      font-size: 14px;
+      font-size: 13px;
       color: #7f8c8d;
       margin-top: 2px;
     }
 
     .qa-hint {
-      font-size: 12px;
+      font-size: 11px;
       color: #888;
-      margin: 8px 0;
+      margin: 6px 0;
     }
 
     .qa-answer {
-      margin-top: 8px;
-      padding: 10px;
+      margin-top: 6px;
+      padding: 8px;
       background-color: #fffaf0;
       border: 1px solid #feebc8;
-      border-radius: 8px;
+      border-radius: 6px;
       width: 100%;
     }
 
     .qa-answer-main {
-      font-size: 20px;
+      font-size: 17px;
       font-weight: bold;
       color: #c0392b;
     }
 
-    /* 薄い文字のコメント欄 */
+    /* コメント欄（コンパクト化） */
     .qa-comment {
-      margin-top: 8px;
-      font-size: 12px;
+      margin-top: 6px;
+      font-size: 11px;
       color: #718096;
       text-align: left;
       background-color: #f7fafc;
-      padding: 8px;
-      border-radius: 6px;
+      padding: 6px 8px;
+      border-radius: 5px;
       border-left: 3px solid #cbd5e0;
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
     .review-checkbox-label {
-      margin-top: 10px;
+      margin-top: 8px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 13px;
+      font-size: 12px;
       color: #e74c3c;
       font-weight: bold;
       cursor: pointer;
       background-color: #fff5f5;
-      padding: 4px 12px;
-      border-radius: 16px;
+      padding: 3px 10px;
+      border-radius: 14px;
       border: 1px solid #fbcfe8;
     }
 
     .review-checkbox-label input {
-      width: 15px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
       cursor: pointer;
     }
 
     .qa-btn {
-      margin-top: 12px;
-      padding: 10px 24px;
-      font-size: 15px;
+      margin-top: 10px;
+      padding: 8px 20px;
+      font-size: 14px;
       font-weight: bold;
       background-color: #27ae60;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
       transition: background-color 0.2s;
       width: 100%;
       max-width: 280px;
@@ -382,9 +385,9 @@
     }
 
     .qa-progress {
-      font-size: 13px;
+      font-size: 12px;
       color: #666;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       font-weight: bold;
     }
 
@@ -393,15 +396,15 @@
     }
 
     @media (max-width: 600px) {
-      body { padding: 8px; }
-      h1 { font-size: 17px; }
+      body { padding: 5px; }
+      h1 { font-size: 15px; }
       .qa-btn {
         position: fixed;
-        bottom: 12px;
+        bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 100;
-        max-width: calc(100% - 24px);
+        max-width: calc(100% - 20px);
       }
     }
   </style>
@@ -409,6 +412,7 @@
 <body>
 
 <div class="container">
+  <!-- バージョン更新通知バナー -->
   <div id="versionNotice" class="version-notice hidden">
     <div class="version-notice-content">
       <span class="version-notice-title" id="versionNoticeTitle">アプリが更新されました</span>
@@ -418,27 +422,32 @@
   </div>
 
   <div class="header-container">
-    <h1>酸塩基暗記倶楽部</h1>
-    <span class="version-badge" id="versionBadge">v1.1.0</span>
+    <h1>酸・塩基・塩 暗記倶楽部</h1>
+    <span class="version-badge" id="versionBadge">v1.1.1</span>
   </div>
 
+  <!-- メイン学習モジュール切替 -->
   <div class="main-module-tabs">
     <button class="module-btn active" id="moduleAcidBase">モード1: 酸・塩基</button>
     <button class="module-btn" id="moduleSalt">モード2: 塩の分類・性質</button>
   </div>
 
+  <!-- 表示モード切替（一覧 / 1問1答） -->
   <div class="mode-tabs">
     <button class="tab-btn active" id="btnListMode">一覧モード</button>
     <button class="tab-btn" id="btnQaMode">1問1答モード</button>
   </div>
 
+  <!-- コントロールエリア -->
   <div class="controls">
+    <!-- モード1用フィルタ -->
     <select id="categoryFilterAcidBase">
       <option value="ALL">すべて（全14種）</option>
       <option value="酸">酸のみ</option>
       <option value="塩基">塩基のみ</option>
     </select>
 
+    <!-- モード2用フィルタ -->
     <select id="categoryFilterSalt" class="hidden">
       <option value="ALL">すべての塩（全16種）</option>
       <option value="正塩">正塩のみ</option>
@@ -446,6 +455,7 @@
       <option value="塩基性塩">塩基性塩のみ</option>
     </select>
 
+    <!-- 1問1答専用：チェック項目の選択（モード1用） -->
     <select id="qaTypeAcidBase" class="hidden">
       <option value="nameToFormula">出題: 名称 ➔ 答: 化学式</option>
       <option value="formulaToName">出題: 化学式 ➔ 答: 名称</option>
@@ -453,6 +463,7 @@
       <option value="checkVolatility">出題: 名称・化学式 ➔ 答: 揮発性</option>
     </select>
 
+    <!-- 1問1答専用：チェック項目の選択（モード2用） -->
     <select id="qaTypeSalt" class="hidden">
       <option value="nameToFormula">出題: 塩の名称 ➔ 答: 化学式</option>
       <option value="formulaToName">出題: 化学式 ➔ 答: 塩の名称</option>
@@ -461,6 +472,7 @@
       <option value="checkPH">出題: 名称・化学式 ➔ 答: 水溶液の液性</option>
     </select>
 
+    <!-- 1問1答専用：出題順序の設定 -->
     <select id="orderSelect" class="hidden">
       <option value="random">出題順: ランダム</option>
       <option value="sequential">出題順: 順番通り</option>
@@ -470,28 +482,31 @@
     <input type="text" id="searchInput" placeholder="名称や化学式で検索...">
   </div>
 
+  <!-- 一覧モードエリア -->
   <div id="listModeArea">
     <div class="count-info" id="countInfo">表示中: 0 件</div>
     <div class="grid" id="cardGrid"></div>
   </div>
 
+  <!-- 1問1答モードエリア -->
   <div id="qaModeArea" class="hidden">
     <div class="qa-container">
       <div class="qa-progress" id="qaProgress">進捗: 0 / 0</div>
       <div class="qa-card" id="qaCard">
         <div style="width: 100%;">
           <span class="card-category" id="qaCategory">-</span>
-          <div id="qaQuestionContent" style="margin-top: 10px;">-</div>
+          <div id="qaQuestionContent" style="margin-top: 6px;">-</div>
         </div>
         
         <div id="qaAnswerBox" class="qa-answer hidden">
-          <div style="font-size: 11px; color: #7f8c8d; margin-bottom: 2px;">【解答】</div>
+          <div style="font-size: 10px; color: #7f8c8d; margin-bottom: 2px;">【解答】</div>
           <div id="qaAnswerContent" class="qa-answer-main">-</div>
           <div id="qaCommentContent" class="qa-comment hidden"></div>
         </div>
         
         <div class="qa-hint" id="qaHint">クリック／タップで答えを表示</div>
 
+        <!-- 要復習チェックボックス -->
         <label class="review-checkbox-label" id="reviewCheckContainer" onclick="event.stopPropagation();">
           <input type="checkbox" id="qaReviewCheck">
           <span style="user-select: none;">要復習（間違えた）</span>
@@ -506,7 +521,7 @@
   // ==========================================
   // バージョン管理設定
   // ==========================================
-  const CURRENT_VERSION = "1.1.0";
+  const CURRENT_VERSION = "1.1.1";
   const STORAGE_KEY_VERSION = "acid_base_app_version";
 
   function checkVersionUpdate() {
@@ -524,7 +539,7 @@
       versionNotice.classList.remove("hidden");
     } else if (savedVersion !== CURRENT_VERSION) {
       versionNoticeTitle.textContent = "アプリが更新されました！";
-      versionNoticeDetail.textContent = `v${savedVersion} から v${CURRENT_VERSION} にアップデートされました（モード2: 塩の分類・性質を追加）。`;
+      versionNoticeDetail.textContent = `v${savedVersion} から v${CURRENT_VERSION} にアップデートされました（レイアウト調整・スクロール保持対応）。`;
       versionNotice.classList.remove("hidden");
     }
 
@@ -944,8 +959,11 @@
     qaIndex = 0;
   }
 
-  // 1問1答の問題表示
+  // 1問1答の問題表示（スクロール位置維持対応）
   function showNextQaQuestion() {
+    // 現在のスクロール位置を保存
+    const currentScrollY = window.scrollY || document.documentElement.scrollTop;
+
     if (activeModule === "salt") {
       qaCard.classList.add("salt-theme");
     } else {
@@ -1073,6 +1091,11 @@
     qaHint.classList.remove("hidden");
 
     qaIndex++;
+
+    // 描画更新後にスクロール位置を復元
+    requestAnimationFrame(() => {
+      window.scrollTo(0, currentScrollY);
+    });
   }
 
   // メインモジュール切り替え
@@ -1193,6 +1216,32 @@
     if (currentMode === "list") renderList();
     else { resetQaDeck(); showNextQaQuestion(); }
   });
+
+  // バージョン判定
+  function checkVersionUpdate() {
+    const savedVersion = localStorage.getItem(STORAGE_KEY_VERSION);
+    const versionBadge = document.getElementById("versionBadge");
+    const versionNotice = document.getElementById("versionNotice");
+    const versionNoticeTitle = document.getElementById("versionNoticeTitle");
+    const versionNoticeDetail = document.getElementById("versionNoticeDetail");
+
+    versionBadge.textContent = `v${CURRENT_VERSION}`;
+
+    if (!savedVersion) {
+      versionNoticeTitle.textContent = "アプリへようこそ！";
+      versionNoticeDetail.textContent = `酸・塩基・塩暗記アプリ (v${CURRENT_VERSION}) をご利用いただけます。`;
+      versionNotice.classList.remove("hidden");
+    } else if (savedVersion !== CURRENT_VERSION) {
+      versionNoticeTitle.textContent = "アプリが更新されました！";
+      versionNoticeDetail.textContent = `v${savedVersion} から v${CURRENT_VERSION} にアップデートされました（レイアウト調整・スクロール位置保持対応）。`;
+      versionNotice.classList.remove("hidden");
+    }
+
+    document.getElementById("closeNoticeBtn").addEventListener("click", () => {
+      localStorage.setItem(STORAGE_KEY_VERSION, CURRENT_VERSION);
+      versionNotice.classList.add("hidden");
+    });
+  }
 
   // 初期化処理
   checkVersionUpdate();

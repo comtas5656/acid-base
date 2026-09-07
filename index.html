@@ -6,11 +6,11 @@
   <title>酸塩基暗記倶楽部</title>
 
   <!-- アイコン設定（PCタブ用 & iOSホーム画面用） -->
-  <link rel="icon" href="icon.png?v=1.4.0" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png?v=1.4.0">
+  <link rel="icon" href="icon.png?v=1.4.2" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png?v=1.4.2">
 
   <!-- PWA設定（Android / Chrome用） -->
-  <link rel="manifest" href="manifest.json?v=1.4.0">
+  <link rel="manifest" href="manifest.json?v=1.4.2">
   <meta name="theme-color" content="#2c3e50">
 
   <!-- iOS (Safari) 用のPWA全画面表示設定 -->
@@ -25,9 +25,11 @@
 
     :root {
       --primary-color: #2c3e50;
-      --secondary-color: #e67e22;
-      --accent-color: #2980b9;
+      /* 各モードの統一テーマカラー */
+      --acidbase-color: #e67e22;
+      --salt-color: #2980b9;
       --oxide-color: #27ae60;
+
       --bg-color: #f8f9fa;
       --card-bg: #ffffff;
       --text-color: #333333;
@@ -155,9 +157,9 @@
 
     .tab-btn {
       padding: 5px 16px;
-      border: 1.5px solid var(--secondary-color);
+      border: 1.5px solid var(--acidbase-color);
       background-color: #fff;
-      color: var(--secondary-color);
+      color: var(--acidbase-color);
       font-weight: bold;
       font-size: 14px;
       border-radius: 16px;
@@ -166,7 +168,7 @@
     }
 
     .tab-btn.active {
-      background-color: var(--secondary-color);
+      background-color: var(--acidbase-color);
       color: #fff;
     }
 
@@ -207,19 +209,24 @@
       text-align: center;
     }
 
+    /* ラベルデザイン統一 */
     .card-category {
       display: inline-block;
       font-size: 11px;
       font-weight: bold;
       color: #fff;
-      background-color: var(--secondary-color);
+      background-color: var(--acidbase-color);
       padding: 2px 8px;
       border-radius: 4px;
       margin-bottom: 4px;
     }
 
+    .card-category.acidbase {
+      background-color: var(--acidbase-color);
+    }
+
     .card-category.salt {
-      background-color: var(--accent-color);
+      background-color: var(--salt-color);
     }
 
     .card-category.oxide {
@@ -284,7 +291,7 @@
       width: 100%;
       max-width: 480px;
       background-color: #fff;
-      border: 2px solid var(--secondary-color);
+      border: 2px solid var(--acidbase-color);
       border-radius: 10px;
       padding: 10px 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.06);
@@ -298,8 +305,12 @@
       transition: border-color 0.2s;
     }
 
+    .qa-card.acidbase-theme {
+      border-color: var(--acidbase-color);
+    }
+
     .qa-card.salt-theme {
-      border-color: var(--accent-color);
+      border-color: var(--salt-color);
     }
 
     .qa-card.oxide-theme {
@@ -437,7 +448,7 @@
 
   <div class="header-container">
     <h1>酸塩基暗記倶楽部</h1>
-    <span class="version-badge" id="versionBadge">v1.4.0</span>
+    <span class="version-badge" id="versionBadge">v1.4.2</span>
   </div>
 
   <div class="main-module-tabs">
@@ -540,7 +551,7 @@
   // ==========================================
   // バージョン管理設定
   // ==========================================
-  const CURRENT_VERSION = "1.4.0";
+  const CURRENT_VERSION = "1.4.2";
   const STORAGE_KEY_VERSION = "acid_base_app_version";
 
   function checkVersionUpdate() {
@@ -558,7 +569,7 @@
       versionNotice.classList.remove("hidden");
     } else if (savedVersion !== CURRENT_VERSION) {
       versionNoticeTitle.textContent = "アプリが更新されました！";
-      versionNoticeDetail.textContent = `v${savedVersion} から v${CURRENT_VERSION} にアップデートされました（モード1に「電離の式」を追加）。`;
+      versionNoticeDetail.textContent = `v${savedVersion} から v${CURRENT_VERSION} にアップデートされました（1問1答のラベル表示を修正）。`;
       versionNotice.classList.remove("hidden");
     }
 
@@ -569,7 +580,7 @@
   }
 
   // ==========================================
-  // モード1：酸・塩基 データベース（電離の式を追加）
+  // モード1：酸・塩基 データベース
   // ==========================================
   const acidBaseData = [
     {
@@ -732,7 +743,7 @@
       comments: {
         basic: "黒色火薬の原料や肥料として使われる。",
         parent: "HNO₃ と KOH",
-        category: "組成中に H も OH も残っていないため正塩。",
+        category: "組成中に H も OH も残していないため正塩。",
         pHType: "K⁺にOH⁻はくっつかない（KOH＝強塩基）。NO₃⁻にH⁺はくっつかない（HNO₃＝強酸）。つまり何も起こらないので中性。"
       }
     },
@@ -777,7 +788,7 @@
       comments: {
         basic: "乾電池の電解液などに使われる。",
         parent: "HCl と NH₃",
-        category: "組成中に H も OH も残っていないため正塩。",
+        category: "組成中に H も OH も残していないため正塩。",
         pHType: "NH₄⁺にOH⁻はくっつく（NH₃＝弱塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまりH⁺が余るので酸性。"
       }
     },
@@ -786,7 +797,7 @@
       comments: {
         basic: "エコカイロ（発熱体）などにも使われる。",
         parent: "CH₃COOH と NaOH",
-        category: "組成中に H も OH も残っていないため正塩。",
+        category: "組成中に H も OH も残していないため正塩。",
         pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。CH₃COO⁻にH⁺はくっつく（CH₃COOH＝弱酸）。つまりOH⁻が余るので塩基性。"
       }
     },
@@ -849,7 +860,7 @@
       comments: {
         basic: "弱酸と弱塩基からなる塩の代表例。",
         parent: "CH₃COOH と NH₃",
-        category: "組成中に H も OH も残っていないため正塩。",
+        category: "組成中に H も OH も残していないため正塩。",
         pHType: "NH₄⁺にOH⁻がくっつき、CH₃COO⁻にH⁺がくっつく。互いに奪うH⁺とOH⁻の量がほぼ等しいため、ほぼ中性。"
       }
     },
@@ -864,8 +875,8 @@
     }
   ];
 
-// ==========================================
-  // モード3：酸化物 データベース（解説コメント補強版）
+  // ==========================================
+  // モード3：酸化物 データベース
   // ==========================================
   const oxideData = [
     {
@@ -949,7 +960,6 @@
       }
     }
   ];
-
 
   // ==========================================
   // アプリケーション状態管理
@@ -1049,7 +1059,7 @@
 
       if (activeModule === "acidBase") {
         card.innerHTML = `
-          <span class="card-category">${item.type}</span>
+          <span class="card-category acidbase">${item.type}</span>
           <div class="card-name">${item.name}</div>
           <div class="card-formula">${item.formula}</div>
           <div class="card-props">
@@ -1122,11 +1132,18 @@
 
   // 1問1答の問題表示
   function showNextQaQuestion() {
-    qaCard.classList.remove("salt-theme", "oxide-theme");
-    if (activeModule === "salt") {
+    qaCard.classList.remove("acidbase-theme", "salt-theme", "oxide-theme");
+    qaCategory.classList.remove("acidbase", "salt", "oxide");
+
+    if (activeModule === "acidBase") {
+      qaCard.classList.add("acidbase-theme");
+      qaCategory.classList.add("acidbase");
+    } else if (activeModule === "salt") {
       qaCard.classList.add("salt-theme");
+      qaCategory.classList.add("salt");
     } else if (activeModule === "oxide") {
       qaCard.classList.add("oxide-theme");
+      qaCategory.classList.add("oxide");
     }
 
     if (qaDeck.length === 0) {
@@ -1172,7 +1189,7 @@
     let cText = "";
 
     if (activeModule === "acidBase") {
-      qaCategory.textContent = currentQaItem.type;
+      qaCategory.textContent = "酸・塩基";
       const qaType = qaTypeAcidBase.value;
 
       if (qaType === "nameToFormula") {
@@ -1202,7 +1219,7 @@
         cText = currentQaItem.comments.volatility;
       }
     } else if (activeModule === "salt") {
-      qaCategory.textContent = currentQaItem.category;
+      qaCategory.textContent = "塩";
       const qaType = qaTypeSalt.value;
 
       if (qaType === "nameToFormula") {
@@ -1232,7 +1249,7 @@
         cText = currentQaItem.comments.pHType;
       }
     } else {
-      qaCategory.textContent = currentQaItem.category;
+      qaCategory.textContent = "酸化物";
       const qaType = qaTypeOxide.value;
 
       if (qaType === "nameToFormula") {
@@ -1305,6 +1322,19 @@
     moduleSaltBtn.classList.toggle("active", moduleName === "salt");
     moduleOxideBtn.classList.toggle("active", moduleName === "oxide");
 
+    // ボタン（タブ）のアクティブカラー連動
+    const activeColor = moduleName === "acidBase" ? "var(--acidbase-color)" : (moduleName === "salt" ? "var(--salt-color)" : "var(--oxide-color)");
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.style.borderColor = activeColor;
+      if (btn.classList.contains("active")) {
+        btn.style.backgroundColor = activeColor;
+        btn.style.color = "#fff";
+      } else {
+        btn.style.backgroundColor = "#fff";
+        btn.style.color = activeColor;
+      }
+    });
+
     categoryFilterAcidBase.classList.toggle("hidden", moduleName !== "acidBase");
     categoryFilterSalt.classList.toggle("hidden", moduleName !== "salt");
     categoryFilterOxide.classList.toggle("hidden", moduleName !== "oxide");
@@ -1327,6 +1357,9 @@
 
     btnListMode.classList.toggle("active", mode === "list");
     btnQaMode.classList.toggle("active", mode === "qa");
+
+    // タブ背景色の更新
+    switchModule(activeModule);
 
     listModeArea.classList.toggle("hidden", mode !== "list");
     qaModeArea.classList.toggle("hidden", mode !== "qa");

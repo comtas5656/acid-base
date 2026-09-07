@@ -3,1207 +3,470 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="app-version" content="1.1.2">
-  
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-
   <title>酸塩基暗記倶楽部</title>
-
-  <link rel="icon" href="icon.png" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png">
-  <link rel="manifest" href="manifest.json">
-
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="酸塩基暗記">
-
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
     :root {
       --primary-color: #2c3e50;
-      --secondary-color: #e67e22;
-      --accent-color: #2980b9;
+      --accent-color: #3498db;
       --bg-color: #f8f9fa;
       --card-bg: #ffffff;
       --text-color: #333333;
-      --border-color: #e9ecef;
+      --border-color: #e0e0e0;
+      --success-color: #27ae60;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
-      margin: 0;
-      padding: 6px 8px;
-      line-height: 1.4;
-    }
-
-    /* バージョン更新通知バナー */
-    .version-notice {
-      background: linear-gradient(135deg, #d35400, #e67e22);
-      color: #ffffff;
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin-bottom: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      font-size: 13px;
-    }
-
-    .version-notice-content {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .version-notice-title {
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    .version-notice-close {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      color: #ffffff;
-      padding: 4px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      white-space: nowrap;
-      transition: background 0.2s;
-    }
-
-    .version-notice-close:hover {
-      background: rgba(255, 255, 255, 0.35);
-    }
-
-    .container {
-      max-width: 1000px;
+      line-height: 1.6;
+      padding: 20px;
+      max-width: 800px;
       margin: 0 auto;
-      width: 100%;
     }
 
-    .header-container {
+    header {
       text-align: center;
-      margin: 2px 0 4px 0;
+      margin-bottom: 20px;
     }
 
     h1 {
-      display: inline-block;
       color: var(--primary-color);
-      margin: 0;
-      font-size: 20px;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
     }
 
-    .version-badge {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: bold;
-      color: #7f8c8d;
-      background-color: #e2e8f0;
-      padding: 1px 6px;
-      border-radius: 10px;
-      margin-left: 4px;
-      vertical-align: middle;
-    }
-
-    /* メイン学習モード切替 (余白のみ凝縮) */
-    .main-module-tabs {
+    nav {
       display: flex;
       justify-content: center;
-      gap: 4px;
-      margin-bottom: 4px;
-      background-color: #edf2f7;
-      padding: 2px;
-      border-radius: 6px;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
-    .module-btn {
-      flex: 1;
-      max-width: 220px;
-      padding: 6px 10px;
-      border: none;
-      background-color: transparent;
-      color: #4a5568;
-      font-weight: bold;
-      font-size: 14px;
-      border-radius: 4px;
+    .nav-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      border-radius: 20px;
       cursor: pointer;
+      font-weight: bold;
       transition: all 0.2s;
     }
 
-    .module-btn.active {
+    .nav-btn.active {
       background-color: var(--primary-color);
-      color: #ffffff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    /* 表示モード切替 (余白のみ凝縮) */
-    .mode-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-
-    .tab-btn {
-      padding: 5px 16px;
-      border: 1.5px solid var(--secondary-color);
-      background-color: #fff;
-      color: var(--secondary-color);
-      font-weight: bold;
-      font-size: 14px;
-      border-radius: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .tab-btn.active {
-      background-color: var(--secondary-color);
-      color: #fff;
-    }
-
-    .controls {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 4px;
-      margin-bottom: 6px;
-      width: 100%;
-    }
-
-    select, input {
-      padding: 6px 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 13px;
-      width: 100%;
-      background-color: #fff;
-      cursor: pointer;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 8px;
-      width: 100%;
+      color: white;
+      border-color: var(--primary-color);
     }
 
     .card {
       background-color: var(--card-bg);
-      border-radius: 8px;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
       border: 1px solid var(--border-color);
-      padding: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .question-box {
+      font-size: 1.3rem;
+      font-weight: bold;
       text-align: center;
-    }
-
-    .card-category {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: bold;
-      color: #fff;
-      background-color: var(--secondary-color);
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-bottom: 4px;
-    }
-
-    .card-category.salt {
-      background-color: var(--accent-color);
-    }
-
-    .card-name {
-      font-size: 16px;
-      font-weight: bold;
-      color: var(--primary-color);
-    }
-
-    .card-formula {
-      font-size: 18px;
-      font-weight: bold;
-      color: #27ae60;
-      margin: 2px 0;
-    }
-
-    .card-props {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 4px;
-      margin-top: 4px;
-      font-size: 12px;
-    }
-
-    .prop-badge {
-      padding: 2px 6px;
-      border-radius: 4px;
+      margin-bottom: 20px;
+      padding: 15px;
       background-color: #edf2f7;
-      color: #4a5568;
-      font-weight: bold;
+      border-radius: 8px;
     }
 
-    .count-info {
-      text-align: right;
-      margin-bottom: 4px;
-      color: #666;
-      font-size: 12px;
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
     }
 
-    /* 1問1答モード用スタイル（文字サイズ維持・余白のみ削る） */
-    .qa-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      padding-bottom: 80px;
+    @media (min-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
-    .qa-card {
-      width: 100%;
-      max-width: 480px;
-      background-color: #fff;
-      border: 2px solid var(--secondary-color);
-      border-radius: 10px;
-      padding: 10px 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-      text-align: center;
+    .option-btn {
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      border-radius: 8px;
       cursor: pointer;
-      user-select: none;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      transition: border-color 0.2s;
-    }
-
-    .qa-card.salt-theme {
-      border-color: var(--accent-color);
-    }
-
-    .qa-card:hover {
-      border-color: #d35400;
-    }
-
-    .qa-question-title {
-      font-size: 22px;
-      font-weight: bold;
-      color: var(--primary-color);
-      margin-top: 2px;
-    }
-
-    .qa-question-sub {
-      font-size: 14px;
-      color: #7f8c8d;
-      margin-top: 2px;
-    }
-
-    .qa-hint {
-      font-size: 12px;
-      color: #888;
-      margin: 6px 0 2px 0;
-    }
-
-    .qa-answer {
-      margin-top: 6px;
-      padding: 8px 10px;
-      background-color: #fffaf0;
-      border: 1px solid #feebc8;
-      border-radius: 6px;
-      width: 100%;
-    }
-
-    .qa-answer-main {
-      font-size: 20px;
-      font-weight: bold;
-      color: #c0392b;
-    }
-
-    .qa-comment {
-      margin-top: 6px;
-      font-size: 13px;
-      color: #4a5568;
       text-align: left;
-      background-color: #f7fafc;
-      padding: 6px 10px;
-      border-radius: 5px;
-      border-left: 3px solid #cbd5e0;
-      line-height: 1.4;
+      font-size: 1rem;
+      transition: background-color 0.2s;
     }
 
-    .review-checkbox-label {
-      margin-top: 6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: #e74c3c;
-      font-weight: bold;
-      cursor: pointer;
-      background-color: #fff5f5;
-      padding: 4px 12px;
-      border-radius: 14px;
-      border: 1px solid #fbcfe8;
+    .option-btn:hover {
+      background-color: #f1f5f9;
     }
 
-    .review-checkbox-label input {
-      width: 15px;
-      height: 15px;
-      cursor: pointer;
+    .comment-box {
+      margin-top: 15px;
+      padding: 15px;
+      background-color: #f0fdf4;
+      border-left: 4px solid var(--success-color);
+      border-radius: 4px;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
     }
 
-    .qa-btn {
-      margin-top: 8px;
-      padding: 10px 20px;
-      font-size: 15px;
-      font-weight: bold;
-      background-color: #27ae60;
+    .action-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: var(--accent-color);
       color: white;
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-      transition: background-color 0.2s;
-      width: 100%;
-      max-width: 280px;
-    }
-
-    .qa-btn:hover {
-      background-color: #219150;
-    }
-
-    .qa-progress {
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 4px;
+      border-radius: 8px;
+      font-size: 1rem;
       font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .action-btn:hover {
+      opacity: 0.9;
+    }
+
+    .list-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .list-table th, .list-table td {
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      text-align: left;
+    }
+
+    .list-table th {
+      background-color: #edf2f7;
     }
 
     .hidden {
-      display: none !important;
-    }
-
-    @media (max-width: 600px) {
-      body { padding: 4px 6px; }
-      h1 { font-size: 18px; }
-      .qa-btn {
-        position: fixed;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 100;
-        max-width: calc(100% - 20px);
-      }
+      display: none;
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <div id="versionNotice" class="version-notice hidden">
-    <div class="version-notice-content">
-      <span class="version-notice-title" id="versionNoticeTitle">アプリが更新されました</span>
-      <span id="versionNoticeDetail">バージョン情報が更新されました。</span>
-    </div>
-    <button class="version-notice-close" id="closeNoticeBtn">了解</button>
-  </div>
-
-  <div class="header-container">
+  <header>
     <h1>酸塩基暗記倶楽部</h1>
-    <span class="version-badge" id="versionBadge">v1.1.2</span>
-  </div>
+    <nav>
+      <button class="nav-btn active" onclick="switchMode(1)">モード1: 酸・塩基</button>
+      <button class="nav-btn" onclick="switchMode(2)">モード2: 塩の分類</button>
+      <button class="nav-btn" onclick="switchMode(3)">モード3: 酸化物</button>
+      <button class="nav-btn" onclick="toggleList()">一覧表示</button>
+    </nav>
+  </header>
 
-  <div class="main-module-tabs">
-    <button class="module-btn active" id="moduleAcidBase">モード1: 酸・塩基</button>
-    <button class="module-btn" id="moduleSalt">モード2: 塩の分類・性質</button>
-  </div>
-
-  <div class="mode-tabs">
-    <button class="tab-btn active" id="btnListMode">一覧モード</button>
-    <button class="tab-btn" id="btnQaMode">1問1答モード</button>
-  </div>
-
-  <div class="controls">
-    <select id="categoryFilterAcidBase">
-      <option value="ALL">すべて（全14種）</option>
-      <option value="酸">酸のみ</option>
-      <option value="塩基">塩基のみ</option>
-    </select>
-
-    <select id="categoryFilterSalt" class="hidden">
-      <option value="ALL">すべての塩（全16種）</option>
-      <option value="正塩">正塩のみ</option>
-      <option value="酸性塩">酸性塩のみ</option>
-      <option value="塩基性塩">塩基性塩のみ</option>
-    </select>
-
-    <select id="qaTypeAcidBase" class="hidden">
-      <option value="nameToFormula">出題: 名称 ➔ 答: 化学式</option>
-      <option value="formulaToName">出題: 化学式 ➔ 答: 名称</option>
-      <option value="checkStrength">出題: 名称・化学式 ➔ 答: 強弱</option>
-      <option value="checkVolatility">出題: 名称・化学式 ➔ 答: 揮発性</option>
-    </select>
-
-    <select id="qaTypeSalt" class="hidden">
-      <option value="nameToFormula">出題: 塩の名称 ➔ 答: 化学式</option>
-      <option value="formulaToName">出題: 化学式 ➔ 答: 塩の名称</option>
-      <option value="checkParents">出題: 名称・化学式 ➔ 答: 元の酸・塩基</option>
-      <option value="checkCategory">出題: 名称・化学式 ➔ 答: 正塩・酸性塩・塩基性塩</option>
-      <option value="checkPH">出題: 名称・化学式 ➔ 答: 水溶液の液性</option>
-    </select>
-
-    <select id="orderSelect" class="hidden">
-      <option value="random">出題順: ランダム</option>
-      <option value="sequential">出題順: 順番通り</option>
-      <option value="reviewOnly">出題順: 要復習チェックのみ</option>
-    </select>
-
-    <input type="text" id="searchInput" placeholder="名称や化学式で検索...">
-  </div>
-
-  <div id="listModeArea">
-    <div class="count-info" id="countInfo">表示中: 0 件</div>
-    <div class="grid" id="cardGrid"></div>
-  </div>
-
-  <div id="qaModeArea" class="hidden">
-    <div class="qa-container">
-      <div class="qa-progress" id="qaProgress">進捗: 0 / 0</div>
-      <div class="qa-card" id="qaCard">
-        <div style="width: 100%;">
-          <span class="card-category" id="qaCategory">-</span>
-          <div id="qaQuestionContent">-</div>
-        </div>
-        
-        <div id="qaAnswerBox" class="qa-answer hidden">
-          <div style="font-size: 11px; color: #7f8c8d; margin-bottom: 2px;">【解答】</div>
-          <div id="qaAnswerContent" class="qa-answer-main">-</div>
-          <div id="qaCommentContent" class="qa-comment hidden"></div>
-        </div>
-        
-        <div class="qa-hint" id="qaHint">クリック／タップで答えを表示</div>
-
-        <label class="review-checkbox-label" id="reviewCheckContainer" onclick="event.stopPropagation();">
-          <input type="checkbox" id="qaReviewCheck">
-          <span style="user-select: none;">要復習（間違えた）</span>
-        </label>
-      </div>
-      <button class="qa-btn" id="nextQaBtn">次の問題へ ➔</button>
+  <main>
+    <!-- クイズカード -->
+    <div id="quiz-view" class="card">
+      <div id="question" class="question-box">問題読み込み中...</div>
+      <div id="options" class="options-grid"></div>
+      <div id="comment" class="comment-box hidden"></div>
+      <button id="next-btn" class="action-btn hidden" onclick="nextQuestion()">次の問題へ</button>
     </div>
-  </div>
-</div>
 
-<script>
-  // ==========================================
-  // バージョン管理設定
-  // ==========================================
-  const CURRENT_VERSION = "1.1.2";
-  const STORAGE_KEY_VERSION = "acid_base_app_version";
+    <!-- 一覧表示ビュー -->
+    <div id="list-view" class="card hidden">
+      <h2 id="list-title">データ一覧</h2>
+      <div style="overflow-x: auto;">
+        <table class="list-table">
+          <thead>
+            <tr id="table-head"></tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
 
-  function checkVersionUpdate() {
-    const savedVersion = localStorage.getItem(STORAGE_KEY_VERSION);
-    const versionBadge = document.getElementById("versionBadge");
-    const versionNotice = document.getElementById("versionNotice");
-    const versionNoticeTitle = document.getElementById("versionNoticeTitle");
-    const versionNoticeDetail = document.getElementById("versionNoticeDetail");
+  <script>
+    // --- データ定義 ---
 
-    versionBadge.textContent = `v${CURRENT_VERSION}`;
+    // モード1: 酸・塩基
+    const mode1Data = [
+      { id: 1, name: "塩酸", formula: "HCl", type: "強酸", volatility: "揮発性", comment: "強酸・1価。揮発性。" },
+      { id: 2, name: "硝酸", formula: "HNO₃", type: "強酸", volatility: "揮発性", comment: "強酸・1価。揮発性。" },
+      { id: 3, name: "硫酸", formula: "H₂SO₄", type: "強酸", volatility: "不揮発性", comment: "強酸・2価。不揮発性。" },
+      { id: 4, name: "酢酸", formula: "CH₃COOH", type: "弱酸", volatility: "揮発性", comment: "弱酸・1価。揮発性。" },
+      { id: 5, name: "水酸化ナトリウム", formula: "NaOH", type: "強塩基", volatility: "-", comment: "強塩基・1価。" },
+      { id: 6, name: "水酸化カルシウム", formula: "Ca(OH)₂", type: "強塩基", volatility: "-", comment: "強塩基・2価。" },
+      { id: 7, name: "アンモニア", formula: "NH₃", type: "弱塩基", volatility: "揮発性", comment: "弱塩基・1価。揮発性。" }
+    ];
 
-    if (!savedVersion) {
-      versionNoticeTitle.textContent = "アプリへようこそ！";
-      versionNoticeDetail.textContent = `酸・塩基・塩暗記アプリ (v${CURRENT_VERSION}) をご利用いただけます。`;
-      versionNotice.classList.remove("hidden");
-    } else if (savedVersion !== CURRENT_VERSION) {
-      versionNoticeTitle.textContent = "アプリが更新されました！";
-      versionNoticeDetail.textContent = `v${savedVersion} から v${CURRENT_VERSION} にアップデートされました（フォントサイズ・余白最適化）。`;
-      versionNotice.classList.remove("hidden");
-    }
+    // モード2: 塩の分類・性質
+    const mode2Data = [
+      { id: 101, name: "塩化ナトリウム", formula: "NaCl", category: "正塩", acidity: "中性", parent: "強酸 + 強塩基", comment: "HCl + NaOH からなる正塩。水溶液は中性。" },
+      { id: 102, name: "炭酸水素ナトリウム", formula: "NaHCO₃", category: "酸性塩", acidity: "弱塩基性", parent: "弱酸 + 強塩基", comment: "H₂CO₃ + NaOH からなる酸性塩。水溶液は弱塩基性。" },
+      { id: 103, name: "硫酸水素ナトリウム", formula: "NaHSO₄", category: "酸性塩", acidity: "酸性", parent: "強酸 + 強塩基", comment: "H₂SO₄ + NaOH からなる酸性塩。水溶液は強酸由来のため酸性。" },
+      { id: 104, name: "塩化アンモニウム", formula: "NH₄Cl", category: "正塩", acidity: "酸性", parent: "強酸 + 弱塩基", comment: "HCl + NH₃ からなる正塩。水溶液は酸性。" },
+      { id: 105, name: "酢酸ナトリウム", formula: "CH₃COONa", category: "正塩", acidity: "弱塩基性", parent: "弱酸 + 強塩基", comment: "CH₃COOH + NaOH からなる正塩。水溶液は弱塩基性。" }
+    ];
 
-    document.getElementById("closeNoticeBtn").addEventListener("click", () => {
-      localStorage.setItem(STORAGE_KEY_VERSION, CURRENT_VERSION);
-      versionNotice.classList.add("hidden");
-    });
-  }
-
-  // ==========================================
-  // モード1：酸・塩基 データベース
-  // ==========================================
-  const acidBaseData = [
-    {
-      id: 1, name: "硝酸", formula: "HNO₃", type: "酸", strength: "強酸", volatility: "揮発性",
-      comments: {
-        basic: "無色の液体。酸化剤にもなる。",
-        strength: "強酸と言えば『しょう・りゅう・えん（硝酸・硫酸・塩酸）』の『しょう』。",
-        volatility: "沸点が低く（83℃）、日光や加熱で分解して気体（NO₂）を発生するため揮発性。"
-      }
-    },
-    {
-      id: 2, name: "塩酸", formula: "HCl", type: "酸", strength: "強酸", volatility: "揮発性",
-      comments: {
-        basic: "塩化水素 HCl（気体）の水溶液。強酸の代表例。",
-        strength: "強酸と言えば『しょう・りゅう・えん』の『えん』。",
-        volatility: "気体（塩化水素）の水溶液なので加熱すると気体が逃げやすい、つまり揮発性。"
-      }
-    },
-    {
-      id: 3, name: "硫酸", formula: "H₂SO₄", type: "酸", strength: "強酸", volatility: "不揮発性",
-      comments: {
-        basic: "2価の強酸。濃硫酸を加熱すると酸化剤になる。",
-        strength: "強酸と言えば『しょう・りゅう・えん』の『りゅう』。",
-        volatility: "沸点が非常に高い（約338℃）ため不揮発性。"
-      }
-    },
-    {
-      id: 4, name: "リン酸", formula: "H₃PO₄", type: "酸", strength: "中程度の酸", volatility: "不揮発性",
-      comments: {
-        basic: "3価の酸。",
-        strength: "電離度は強酸ほど高くなく、弱酸よりは高いため『中程度の酸』とされる。",
-        volatility: "沸点が高く常温で結晶（固体）として存在するため不揮発性。"
-      }
-    },
-    {
-      id: 5, name: "酢酸", formula: "CH₃COOH", type: "酸", strength: "弱酸", volatility: "揮発性",
-      comments: {
-        basic: "食酢の成分。",
-        strength: "弱酸の代表例。実は炭酸よりは強い。",
-        volatility: "酢はにおいますよね。におうということは揮発性。"
-      }
-    },
-    {
-      id: 6, name: "フッ化水素酸", formula: "HF", type: "酸", strength: "弱酸", volatility: "揮発性",
-      comments: {
-        basic: "ガラス（SiO₂）を侵す唯一の酸。",
-        strength: "ハロゲン化水素（HCl, HBr, HI）の中でHFだけが水素結合のため弱酸。",
-        volatility: "沸点が低い（20℃）、つまり気体になりやすいため揮発性。"
-      }
-    },
-    {
-      id: 7, name: "炭酸", formula: "H₂CO₃", type: "酸", strength: "弱酸", volatility: "揮発性",
-      comments: {
-        basic: "二酸化炭素（気体）が水に溶けた弱酸。",
-        strength: "弱酸の代表例。ただしフェノールより強い。",
-        volatility: "気体（CO₂）の水溶液なので加熱すると気体が逃げやすい、つまり揮発性。"
-      }
-    },
-    {
-      id: 8, name: "硫化水素", formula: "H₂S", type: "酸", strength: "弱酸", volatility: "揮発性",
-      comments: {
-        basic: "腐卵臭（腐った卵のにおい）のする気体。",
-        strength: "弱酸。陽イオンを沈殿させる目的でよく出てくる。",
-        volatility: "気体の水溶液なので加熱すると気体が逃げやすい、つまり揮発性。"
-      }
-    },
-    {
-      id: 9, name: "シュウ酸", formula: "H₂C₂O₄", type: "酸", strength: "弱酸", volatility: "不揮発性",
-      comments: {
-        basic: "（COOH）₂ とも表記される。還元剤にもなる。",
-        strength: "弱酸。よく中和滴定の標準溶液として登場する。",
-        volatility: "常温で固体の結晶のため不揮発性。"
-      }
-    },
-    {
-      id: 10, name: "水酸化カリウム", formula: "KOH", type: "塩基", strength: "強塩基", volatility: "不揮発性",
-      comments: {
-        basic: "強塩基の代表例。",
-        strength: "アルカリ金属（1族）の水酸化物はすべて強塩基。",
-        volatility: "イオン結合のため少々加熱しても液体・気体にならない。不揮発性。"
-      }
-    },
-    {
-      id: 11, name: "水酸化ナトリウム", formula: "NaOH", type: "塩基", strength: "強塩基", volatility: "不揮発性",
-      comments: {
-        basic: "強塩基の代表例。",
-        strength: "アルカリ金属（1族）の水酸化物はすべて強塩基。",
-        volatility: "イオン結合のため少々加熱しても液体・気体にならない。不揮発性。"
-      }
-    },
-    {
-      id: 12, name: "水酸化カルシウム", formula: "Ca(OH)₂", type: "塩基", strength: "強塩基", volatility: "不揮発性",
-      comments: {
-        basic: "消石灰とも呼ばれる。水溶液は『石灰水』。",
-        strength: "アルカリ土類金属のCa以下（Ca, Sr, Ba）の水酸化物は強塩基。",
-        volatility: "イオン結合のため少々加熱しても液体・気体にならない。不揮発性。"
-      }
-    },
-    {
-      id: 13, name: "水酸化バリウム", formula: "Ba(OH)₂", type: "塩基", strength: "強塩基", volatility: "不揮発性",
-      comments: {
-        basic: "CO₂と反応して白色沈殿（BaCO₃）を生じる。",
-        strength: "アルカリ土類金属のCa以下（Ca, Sr, Ba）の水酸化物は強塩基。",
-        volatility: "イオン結合のため少々加熱しても液体・気体にならない。不揮発性。"
-      }
-    },
-    {
-      id: 14, name: "アンモニア", formula: "NH₃", type: "塩基", strength: "弱塩基", volatility: "揮発性",
-      comments: {
-        basic: "刺激臭を持つ気体。",
-        strength: "弱塩基の代表例。",
-        volatility: "気体の水溶液なので加熱すると気体が逃げやすい、つまり揮発性。"
-      }
-    }
-  ];
-
-  // ==========================================
-  // モード2：塩のデータベース
-  // ==========================================
-  const saltData = [
-    {
-      id: 101, name: "塩化カルシウム", formula: "CaCl₂", parentAcid: "HCl", parentBase: "Ca(OH)₂", category: "正塩", pHType: "中性", askPH: true,
-      comments: {
-        basic: "乾燥剤や融雪剤として利用される塩。",
-        parent: "HCl と Ca(OH)₂",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "Ca²⁺にOH⁻はくっつかない（Ca(OH)₂＝強塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまり何も起こらないので中性。"
-      }
-    },
-    {
-      id: 102, name: "硝酸カリウム", formula: "KNO₃", parentAcid: "HNO₃", parentBase: "KOH", category: "正塩", pHType: "中性", askPH: true,
-      comments: {
-        basic: "黒色火薬の原料や肥料として使われる。",
-        parent: "HNO₃ と KOH",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "K⁺にOH⁻はくっつかない（KOH＝強塩基）。NO₃⁻にH⁺はくっつかない（HNO₃＝強酸）。つまり何も起こらないので中性。"
-      }
-    },
-    {
-      id: 103, name: "硫酸ナトリウム", formula: "Na₂SO₄", parentAcid: "H₂SO₄", parentBase: "NaOH", category: "正塩", pHType: "中性", askPH: true,
-      comments: {
-        basic: "入浴剤の成分などにも用いられる。",
-        parent: "H₂SO₄ と NaOH",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。SO₄²⁻にH⁺はくっつかない（H₂SO₄＝強酸）。つまり何も起こらないので中性。"
-      }
-    },
-    {
-      id: 104, name: "硫酸水素ナトリウム", formula: "NaHSO₄", parentAcid: "H₂SO₄", parentBase: "NaOH", category: "酸性塩", pHType: "酸性", askPH: true,
-      comments: {
-        basic: "強酸の H が1つ残った酸性塩。",
-        parent: "H₂SO₄ と NaOH",
-        category: "酸の H が残っているため酸性塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。HSO₄⁻はさらに電離してH⁺を出す（H₂SO₄＝強酸）。つまりH⁺が余るので酸性。"
-      }
-    },
-    {
-      id: 105, name: "炭酸カルシウム", formula: "CaCO₃", parentAcid: "H₂CO₃", parentBase: "Ca(OH)₂", category: "正塩", pHType: "水に難溶（考慮しない）", askPH: false,
-      comments: {
-        basic: "貝殻や大理石、石灰石の主成分。",
-        parent: "H₂CO₃ と Ca(OH)₂",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "水にほとんど溶けない（難溶性）ため、水溶液の液性は考えない。"
-      }
-    },
-    {
-      id: 106, name: "炭酸水素カルシウム", formula: "Ca(HCO₃)₂", parentAcid: "H₂CO₃", parentBase: "Ca(OH)₂", category: "酸性塩", pHType: "弱塩基性", askPH: true,
-      comments: {
-        basic: "鍾乳洞の形成に関わる、水に溶ける塩。",
-        parent: "H₂CO₃ と Ca(OH)₂",
-        category: "酸の H が残っているため酸性塩。",
-        pHType: "Ca²⁺にOH⁻はくっつかない（Ca(OH)₂＝強塩基）。HCO₃⁻にH⁺はくっつく（H₂CO₃＝弱酸）。つまりOH⁻が余るので塩基性。"
-      }
-    },
-    {
-      id: 107, name: "塩化アンモニウム", formula: "NH₄Cl", parentAcid: "HCl", parentBase: "NH₃", category: "正塩", pHType: "弱酸性", askPH: true,
-      comments: {
-        basic: "乾電池の電解液などに使われる。",
-        parent: "HCl と NH₃",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "NH₄⁺にOH⁻はくっつく（NH₃＝弱塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまりH⁺が余るので酸性。"
-      }
-    },
-    {
-      id: 108, name: "酢酸ナトリウム", formula: "CH₃COONa", parentAcid: "CH₃COOH", parentBase: "NaOH", category: "正塩", pHType: "弱塩基性", askPH: true,
-      comments: {
-        basic: "エコカイロ（発熱体）などにも使われる。",
-        parent: "CH₃COOH と NaOH",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。CH₃COO⁻にH⁺はくっつく（CH₃COOH＝弱酸）。つまりOH⁻が余るので塩基性。"
-      }
-    },
-    {
-      id: 109, name: "塩化ナトリウム", formula: "NaCl", parentAcid: "HCl", parentBase: "NaOH", category: "正塩", pHType: "中性", askPH: true,
-      comments: {
-        basic: "食塩の主成分。代表的な塩。",
-        parent: "HCl と NaOH",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまり何も起こらないので中性。"
-      }
-    },
-    {
-      id: 110, name: "フッ化カルシウム", formula: "CaF₂", parentAcid: "HF", parentBase: "Ca(OH)₂", category: "正塩", pHType: "水に難溶（考慮しない）", askPH: false,
-      comments: {
-        basic: "鉱物の「ホタル石」の主成分。",
-        parent: "HF と Ca(OH)₂",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "水にほぼ溶けない（難溶性）ため、水溶液の液性は考えない。"
-      }
-    },
-    {
-      id: 111, name: "炭酸ナトリウム", formula: "Na₂CO₃", parentAcid: "H₂CO₃", parentBase: "NaOH", category: "正塩", pHType: "弱塩基性", askPH: true,
-      comments: {
-        basic: "ガラスの原料などに使われる（無水物）。",
-        parent: "H₂CO₃ と NaOH",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。CO₃²⁻にH⁺はくっつく（H₂CO₃＝弱酸）。つまりOH⁻が余るので塩基性。"
-      }
-    },
-    {
-      id: 112, name: "炭酸水素ナトリウム", formula: "NaHCO₃", parentAcid: "H₂CO₃", parentBase: "NaOH", category: "酸性塩", pHType: "弱塩基性", askPH: true,
-      comments: {
-        basic: "重曹（ベーキングパウダー）の成分。",
-        parent: "H₂CO₃ と NaOH",
-        category: "酸の H が残っているため酸性塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。HCO₃⁻にH⁺はくっつく（H₂CO₃＝弱酸）。つまりOH⁻が余るので塩基性。"
-      }
-    },
-    {
-      id: 113, name: "硫酸銅(II)", formula: "CuSO₄", parentAcid: "H₂SO₄", parentBase: "Cu(OH)₂", category: "正塩", pHType: "弱酸性", askPH: true,
-      comments: {
-        basic: "無水物は白色、5水和物（CuSO₄·5H₂O）は青色の結晶。",
-        parent: "H₂SO₄ と Cu(OH)₂",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "Cu²⁺にOH⁻はくっつく（Cu(OH)₂＝弱塩基）。SO₄²⁻にH⁺はくっつかない（H₂SO₄＝強酸）。つまりH⁺が余るので酸性。"
-      }
-    },
-    {
-      id: 114, name: "硫化鉄(II)", formula: "FeS", parentAcid: "H₂S", parentBase: "Fe(OH)₂", category: "正塩", pHType: "水に難溶（考慮しない）", askPH: false,
-      comments: {
-        basic: "黒色沈殿。希硫酸を加えると H₂S 気体が発生する。",
-        parent: "H₂S と Fe(OH)₂",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "水に全く溶けない（難溶性）ため、水溶液の液性は考えない。"
-      }
-    },
-    {
-      id: 115, name: "酢酸アンモニウム", formula: "CH₃COONH₄", parentAcid: "CH₃COOH", parentBase: "NH₃", category: "正塩", pHType: "ほぼ中性（問われない）", askPH: false,
-      comments: {
-        basic: "弱酸と弱塩基からなる塩の代表例。",
-        parent: "CH₃COOH と NH₃",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "NH₄⁺にOH⁻がくっつき、CH₃COO⁻にH⁺がくっつく。互いに奪うH⁺とOH⁻の量がほぼ等しいため、ほぼ中性。"
-      }
-    },
-    {
-      id: 116, name: "塩基性塩化マグネシウム", formula: "MgCl(OH)", parentAcid: "HCl", parentBase: "Mg(OH)₂", category: "塩基性塩", pHType: "弱酸性", askPH: true,
-      comments: {
-        basic: "塩基の OH が残った塩基性塩の代表例。",
-        parent: "HCl と Mg(OH)₂",
-        category: "塩基の OH が残っているため塩基性塩。",
-        pHType: "Mg²⁺にOH⁻はくっつく（Mg(OH)₂＝弱塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまりH⁺が余るので酸性。"
-      }
-    }
-  ];
-
-  // ==========================================
-  // アプリケーション状態管理
-  // ==========================================
-  let activeModule = "acidBase"; // "acidBase" または "salt"
-  let currentMode = "list";      // "list" または "qa"
-  let qaDeck = [];
-  let qaIndex = 0;
-  let currentQaItem = null;
-  const reviewSet = new Set();
-
-  // DOM要素参照
-  const moduleAcidBaseBtn = document.getElementById("moduleAcidBase");
-  const moduleSaltBtn = document.getElementById("moduleSalt");
-  const categoryFilterAcidBase = document.getElementById("categoryFilterAcidBase");
-  const categoryFilterSalt = document.getElementById("categoryFilterSalt");
-  const qaTypeAcidBase = document.getElementById("qaTypeAcidBase");
-  const qaTypeSalt = document.getElementById("qaTypeSalt");
-  const orderSelect = document.getElementById("orderSelect");
-  const searchInput = document.getElementById("searchInput");
-  const cardGrid = document.getElementById("cardGrid");
-  const countInfo = document.getElementById("countInfo");
-
-  const btnListMode = document.getElementById("btnListMode");
-  const btnQaMode = document.getElementById("btnQaMode");
-  const listModeArea = document.getElementById("listModeArea");
-  const qaModeArea = document.getElementById("qaModeArea");
-
-  const qaCard = document.getElementById("qaCard");
-  const qaCategory = document.getElementById("qaCategory");
-  const qaQuestionContent = document.getElementById("qaQuestionContent");
-  const qaAnswerContent = document.getElementById("qaAnswerContent");
-  const qaCommentContent = document.getElementById("qaCommentContent");
-  const qaAnswerBox = document.getElementById("qaAnswerBox");
-  const qaHint = document.getElementById("qaHint");
-  const qaProgress = document.getElementById("qaProgress");
-  const nextQaBtn = document.getElementById("nextQaBtn");
-  const qaReviewCheck = document.getElementById("qaReviewCheck");
-
-  // アクティブなデータ配列を取得
-  function getActiveData() {
-    return activeModule === "acidBase" ? acidBaseData : saltData;
-  }
-
-  // フィルタリング処理
-  function getFilteredData() {
-    const data = getActiveData();
-    const keyword = searchInput.value.toLowerCase().trim();
-
-    if (activeModule === "acidBase") {
-      const selectedCategory = categoryFilterAcidBase.value;
-      return data.filter(item => {
-        const matchCat = (selectedCategory === "ALL" || item.type === selectedCategory);
-        const matchKey = (item.name.toLowerCase().includes(keyword) ||
-                          item.formula.toLowerCase().includes(keyword));
-        return matchCat && matchKey;
-      });
-    } else {
-      const selectedCategory = categoryFilterSalt.value;
-      return data.filter(item => {
-        const matchCat = (selectedCategory === "ALL" || item.category === selectedCategory);
-        const matchKey = (item.name.toLowerCase().includes(keyword) ||
-                          item.formula.toLowerCase().includes(keyword) ||
-                          item.parentAcid.toLowerCase().includes(keyword) ||
-                          item.parentBase.toLowerCase().includes(keyword));
-        return matchCat && matchKey;
-      });
-    }
-  }
-
-  // 一覧表示の更新
-  function renderList() {
-    const filtered = getFilteredData();
-    const totalCount = getActiveData().length;
-    cardGrid.innerHTML = "";
-
-    filtered.forEach(item => {
-      const card = document.createElement("div");
-      card.className = "card";
-
-      if (activeModule === "acidBase") {
-        card.innerHTML = `
-          <span class="card-category">${item.type}</span>
-          <div class="card-name">${item.name}</div>
-          <div class="card-formula">${item.formula}</div>
-          <div class="card-props">
-            <span class="prop-badge">${item.strength}</span>
-            <span class="prop-badge">${item.volatility}</span>
-          </div>
-        `;
-      } else {
-        card.innerHTML = `
-          <span class="card-category salt">${item.category}</span>
-          <div class="card-name">${item.name}</div>
-          <div class="card-formula">${item.formula}</div>
-          <div class="card-props">
-            <span class="prop-badge">原料: ${item.parentAcid} + ${item.parentBase}</span>
-            <span class="prop-badge">液性: ${item.pHType}</span>
-          </div>
-        `;
-      }
-      cardGrid.appendChild(card);
-    });
-
-    countInfo.textContent = `表示中: ${filtered.length} 件 / 全 ${totalCount} 件`;
-  }
-
-  function shuffle(array) {
-    const arr = [...array];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }
-
-  // 1問1答用デッキの初期化
-  function resetQaDeck() {
-    let filtered = getFilteredData();
-
-    // モード2かつ「液性チェック」選択時、askPH: false の問題を除外
-    if (activeModule === "salt" && qaTypeSalt.value === "checkPH") {
-      filtered = filtered.filter(item => item.askPH !== false);
-    }
-
-    if (orderSelect.value === "reviewOnly") {
-      filtered = filtered.filter(item => reviewSet.has(item.id));
-    }
-
-    if (filtered.length === 0) {
-      qaDeck = [];
-      qaIndex = 0;
-      return;
-    }
-
-    if (orderSelect.value === "random" || orderSelect.value === "reviewOnly") {
-      qaDeck = shuffle(filtered);
-    } else {
-      qaDeck = [...filtered];
-    }
-    qaIndex = 0;
-  }
-
-  // 1問1答の問題表示（スクロール位置維持対応）
-  function showNextQaQuestion() {
-    const currentScrollY = window.scrollY || document.documentElement.scrollTop;
-
-    if (activeModule === "salt") {
-      qaCard.classList.add("salt-theme");
-    } else {
-      qaCard.classList.remove("salt-theme");
-    }
-
-    if (qaDeck.length === 0) {
-      qaCategory.textContent = "-";
-      if (orderSelect.value === "reviewOnly") {
-        qaQuestionContent.innerHTML = "<div class='qa-question-title'>要復習（間違えた）問題はありません！</div>";
-      } else {
-        qaQuestionContent.innerHTML = "<div class='qa-question-title'>該当する問題がありません</div>";
-      }
-      qaAnswerContent.textContent = "-";
-      qaCommentContent.classList.add("hidden");
-      qaProgress.textContent = "進捗: 0 / 0";
-      qaAnswerBox.classList.add("hidden");
-      qaHint.classList.add("hidden");
-      document.getElementById("reviewCheckContainer").classList.add("hidden");
-      currentQaItem = null;
-      return;
-    }
-
-    document.getElementById("reviewCheckContainer").classList.remove("hidden");
-
-    if (qaIndex >= qaDeck.length) {
-      const currentFiltered = getFilteredData();
-      const currentReviewItems = currentFiltered.filter(item => reviewSet.has(item.id));
-
-      if (currentReviewItems.length > 0) {
-        const doReview = confirm(`1周が完了しました！\n「要復習」にチェックした問題が ${currentReviewItems.length} 件あります。\n復習周回を開始しますか？`);
-        if (doReview) {
-          orderSelect.value = "reviewOnly";
+    // モード3: 酸化物
+    const mode3Data = [
+      {
+        id: 201,
+        name: "二酸化炭素",
+        formula: "CO₂",
+        category: "酸性酸化物",
+        waterReaction: "CO₂ + H₂O ⇄ H₂CO₃",
+        acidBaseReaction: "CO₂ + Ca(OH)₂ → CaCO₃ + H₂O\nCO₂ + CaO → CaCO₃",
+        comments: {
+          basic: "非金属（C）の酸化物。",
+          category: "酸性酸化物（水に溶けて酸を生じる、または塩基と反応して塩を作る）。",
+          water: "CO₂ + H₂O ⇄ H₂CO₃",
+          acidBase: "H₂CO₃（炭酸）と同様の働きをする。"
         }
-      } else if (orderSelect.value === "reviewOnly") {
-        alert("復習チェックのついた問題をすべて周回しました！\n通常モードに戻ります。");
-        orderSelect.value = "random";
+      },
+      {
+        id: 202,
+        name: "二酸化硫黄",
+        formula: "SO₂",
+        category: "酸性酸化物",
+        waterReaction: "SO₂ + H₂O ⇄ H₂SO₃",
+        acidBaseReaction: "SO₂ + 2NaOH → Na₂SO₃ + H₂O\nSO₂ + Na₂O → Na₂SO₃",
+        comments: {
+          basic: "非金属（S）の酸化物。",
+          category: "酸性酸化物。",
+          water: "SO₂ + H₂O ⇄ H₂SO₃",
+          acidBase: "H₂SO₃（亜硫酸）と同様の働きをする。"
+        }
+      },
+      {
+        id: 203,
+        name: "三酸化硫黄",
+        formula: "SO₃",
+        category: "酸性酸化物",
+        waterReaction: "SO₃ + H₂O → H₂SO₄",
+        acidBaseReaction: "SO₃ + 2NaOH → Na₂SO₄ + H₂O",
+        comments: {
+          basic: "非金属（S）の酸化物。",
+          category: "酸性酸化物。",
+          water: "SO₃ + H₂O → H₂SO₄",
+          acidBase: "H₂SO₄（硫酸）と同様の働きをする。"
+        }
+      },
+      {
+        id: 204,
+        name: "二酸化ケイ素",
+        formula: "SiO₂",
+        category: "酸性酸化物",
+        waterReaction: "反応しない（不溶）",
+        acidBaseReaction: "SiO₂ + 2NaOH → Na₂SiO₃ + H₂O（加熱融解）\nSiO₂ + Na₂CO₃ → Na₂SiO₃ + CO₂",
+        comments: {
+          basic: "石英・ケイ砂の主成分（共有結合結晶）。",
+          category: "酸性酸化物（水とは反応しないが塩基と反応する）。",
+          water: "反応しない（不溶）。",
+          acidBase: "H₂SiO₃（ケイ酸）と同様の働きをする。"
+        }
+      },
+      {
+        id: 205,
+        name: "二酸化窒素",
+        formula: "NO₂",
+        category: "酸性酸化物",
+        waterReaction: "3NO₂ + H₂O → 2HNO₃ + NO（温水）",
+        acidBaseReaction: "2NO₂ + 2NaOH → NaNO₂ + NaNO₃ + H₂O",
+        comments: {
+          basic: "赤褐色の気体。非金属（N）の酸化物。",
+          category: "酸性酸化物。",
+          water: "3NO₂ + H₂O → 2HNO₃ + NO（自己酸化還元反応）",
+          acidBase: "HNO₂（亜硝酸）および HNO₃（硝酸）と同様の働きをし、亜硝酸塩と硝酸塩を生じる。"
+        }
+      },
+      {
+        id: 206,
+        name: "酸化カルシウム",
+        formula: "CaO",
+        category: "塩基性酸化物",
+        waterReaction: "CaO + H₂O → Ca(OH)₂",
+        acidBaseReaction: "CaO + 2HCl → CaCl₂ + H₂O\nCaO + CO₂ → CaCO₃",
+        comments: {
+          basic: "生石灰。金属（Ca）の酸化物。",
+          category: "塩基性酸化物（水と反応して塩基を生じる、または酸と反応して塩を作る）。",
+          water: "CaO + H₂O → Ca(OH)₂（発熱反応）",
+          acidBase: "Ca(OH)₂（水酸化カルシウム）と同様の働きをする。"
+        }
+      },
+      {
+        id: 207,
+        name: "酸化ナトリウム",
+        formula: "Na₂O",
+        category: "塩基性酸化物",
+        waterReaction: "Na₂O + H₂O → 2NaOH",
+        acidBaseReaction: "Na₂O + H₂SO₄ → Na₂SO₄ + H₂O\nNa₂O + SO₂ → Na₂SO₃",
+        comments: {
+          basic: "金属（Na）の酸化物。",
+          category: "塩基性酸化物。",
+          water: "Na₂O + H₂O → 2NaOH",
+          acidBase: "NaOH（水酸化ナトリウム）と同様の働きをする。"
+        }
+      },
+      {
+        id: 208,
+        name: "酸化アルミニウム",
+        formula: "Al₂O₃",
+        category: "両性酸化物",
+        waterReaction: "反応しない（不溶）",
+        acidBaseReaction: "対 酸: Al₂O₃ + 6HCl → 2AlCl₃ + 3H₂O\n対 塩基: Al₂O₃ + 2NaOH + 3H₂O → 2Na[Al(OH)₄]",
+        comments: {
+          basic: "アルミナ。両性元素（Al）の酸化物。",
+          category: "両性酸化物（酸とも強塩基とも反応する）。",
+          water: "反応しない（不溶）。",
+          acidBase: "酸に対しては塩基として、強塩基に対しては酸として働く。"
+        }
       }
-      resetQaDeck();
+    ];
+
+    // --- 状態管理 ---
+    let currentMode = 1;
+    let currentQuestion = null;
+    let isListView = false;
+
+    // --- モード切り替え ---
+    function switchMode(mode) {
+      currentMode = mode;
+      isListView = false;
+      
+      document.querySelectorAll('.nav-btn').forEach((btn, index) => {
+        if (index === mode - 1) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      document.getElementById('quiz-view').classList.remove('hidden');
+      document.getElementById('list-view').classList.add('hidden');
+
+      nextQuestion();
     }
 
-    currentQaItem = qaDeck[qaIndex];
+    // --- 一覧表示切り替え ---
+    function toggleList() {
+      isListView = !isListView;
+      const quizView = document.getElementById('quiz-view');
+      const listView = document.getElementById('list-view');
 
-    let qTitle = "";
-    let qSub = "";
-    let aText = "";
-    let cText = "";
-
-    if (activeModule === "acidBase") {
-      qaCategory.textContent = currentQaItem.type;
-      const qaType = qaTypeAcidBase.value;
-
-      if (qaType === "nameToFormula") {
-        qTitle = currentQaItem.name;
-        qSub = "この物質の化学式は？";
-        aText = currentQaItem.formula;
-        cText = currentQaItem.comments.basic;
-      } else if (qaType === "formulaToName") {
-        qTitle = currentQaItem.formula;
-        qSub = "この化学式の物質名は？";
-        aText = currentQaItem.name;
-        cText = currentQaItem.comments.basic;
-      } else if (qaType === "checkStrength") {
-        qTitle = `${currentQaItem.name} ${currentQaItem.formula}`;
-        qSub = "この物質の強弱（電離度）は？";
-        aText = currentQaItem.strength;
-        cText = currentQaItem.comments.strength;
-      } else if (qaType === "checkVolatility") {
-        qTitle = `${currentQaItem.name} ${currentQaItem.formula}`;
-        qSub = "この物質の揮発性の有無は？";
-        aText = currentQaItem.volatility;
-        cText = currentQaItem.comments.volatility;
-      }
-    } else {
-      qaCategory.textContent = currentQaItem.category;
-      const qaType = qaTypeSalt.value;
-
-      if (qaType === "nameToFormula") {
-        qTitle = currentQaItem.name;
-        qSub = "この塩の化学式は？";
-        aText = currentQaItem.formula;
-        cText = currentQaItem.comments.basic;
-      } else if (qaType === "formulaToName") {
-        qTitle = currentQaItem.formula;
-        qSub = "この化学式の塩の名称は？";
-        aText = currentQaItem.name;
-        cText = currentQaItem.comments.basic;
-      } else if (qaType === "checkParents") {
-        qTitle = `${currentQaItem.name} ${currentQaItem.formula}`;
-        qSub = "この塩の元の酸と塩基の組み合わせは？";
-        aText = `${currentQaItem.parentAcid} + ${currentQaItem.parentBase}`;
-        cText = currentQaItem.comments.parent;
-      } else if (qaType === "checkCategory") {
-        qTitle = `${currentQaItem.name} ${currentQaItem.formula}`;
-        qSub = "この塩の分類（正塩・酸性塩・塩基性塩）は？";
-        aText = currentQaItem.category;
-        cText = currentQaItem.comments.category;
-      } else if (qaType === "checkPH") {
-        qTitle = `${currentQaItem.name} ${currentQaItem.formula}`;
-        qSub = "この塩の水溶液の液性は？";
-        aText = currentQaItem.pHType;
-        cText = currentQaItem.comments.pHType;
+      if (isListView) {
+        quizView.classList.add('hidden');
+        listView.classList.remove('hidden');
+        renderList();
+      } else {
+        quizView.classList.remove('hidden');
+        listView.classList.add('hidden');
       }
     }
 
-    qaQuestionContent.innerHTML = `
-      <div class="qa-question-title">${qTitle}</div>
-      <div class="qa-question-sub">${qSub}</div>
-    `;
-    qaAnswerContent.textContent = aText;
+    // --- クイズ生成ロジック ---
+    function nextQuestion() {
+      document.getElementById('comment').classList.add('hidden');
+      document.getElementById('next-btn').classList.add('hidden');
 
-    if (cText) {
-      qaCommentContent.textContent = `💡 ${cText}`;
-      qaCommentContent.classList.remove("hidden");
-    } else {
-      qaCommentContent.classList.add("hidden");
-    }
+      let dataset = mode1Data;
+      if (currentMode === 2) dataset = mode2Data;
+      if (currentMode === 3) dataset = mode3Data;
 
-    qaReviewCheck.checked = reviewSet.has(currentQaItem.id);
+      const item = dataset[Math.floor(Math.random() * dataset.length)];
+      currentQuestion = item;
 
-    const prefix = orderSelect.value === "reviewOnly" ? "【復習中】" : "";
-    qaProgress.textContent = `${prefix}進捗: ${qaIndex + 1} / ${qaDeck.length}`;
+      const qBox = document.getElementById('question');
+      const optBox = document.getElementById('options');
+      optBox.innerHTML = '';
 
-    qaAnswerBox.classList.add("hidden");
-    qaHint.classList.remove("hidden");
-
-    qaIndex++;
-
-    requestAnimationFrame(() => {
-      window.scrollTo(0, currentScrollY);
-    });
-  }
-
-  // メインモジュール切り替え
-  function setMainModule(moduleName) {
-    activeModule = moduleName;
-    if (activeModule === "acidBase") {
-      moduleAcidBaseBtn.classList.add("active");
-      moduleSaltBtn.classList.remove("active");
-      categoryFilterAcidBase.classList.remove("hidden");
-      categoryFilterSalt.classList.add("hidden");
-      if (currentMode === "qa") {
-        qaTypeAcidBase.classList.remove("hidden");
-        qaTypeSalt.classList.add("hidden");
+      if (currentMode === 1) {
+        qBox.textContent = `【${item.name} (${item.formula})】の分類は？`;
+        const options = ["強酸", "弱酸", "強塩基", "弱塩基"];
+        options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.textContent = opt;
+          btn.onclick = () => checkAnswer(opt === item.type, item.comment);
+          optBox.appendChild(btn);
+        });
+      } else if (currentMode === 2) {
+        qBox.textContent = `【${item.name} (${item.formula})】の水溶液の液性は？`;
+        const options = ["酸性", "中性", "弱塩基性", "強塩基性"];
+        options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.textContent = opt;
+          btn.onclick = () => checkAnswer(opt === item.acidity, item.comment);
+          optBox.appendChild(btn);
+        });
+      } else if (currentMode === 3) {
+        qBox.textContent = `【${item.name} (${item.formula})】の分類は？`;
+        const options = ["酸性酸化物", "塩基性酸化物", "両性酸化物"];
+        options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.textContent = opt;
+          btn.onclick = () => {
+            const commentText = `【分類】${item.category}\n【水との反応】${item.waterReaction}\n【酸・塩基との反応】\n${item.acidBaseReaction}\n\n💡解説:\n${item.comments.basic}\n${item.comments.category}\n${item.comments.acidBase}`;
+            checkAnswer(opt === item.category, commentText);
+          };
+          optBox.appendChild(btn);
+        });
       }
-    } else {
-      moduleSaltBtn.classList.add("active");
-      moduleAcidBaseBtn.classList.remove("active");
-      categoryFilterSalt.classList.remove("hidden");
-      categoryFilterAcidBase.classList.add("hidden");
-      if (currentMode === "qa") {
-        qaTypeSalt.classList.remove("hidden");
-        qaTypeAcidBase.classList.add("hidden");
+    }
+
+    function checkAnswer(isCorrect, commentText) {
+      const commentBox = document.getElementById('comment');
+      const nextBtn = document.getElementById('next-btn');
+
+      commentBox.textContent = (isCorrect ? "⭕ 正解！\n\n" : "❌ 不正解...\n\n") + commentText;
+      commentBox.classList.remove('hidden');
+      nextBtn.classList.remove('hidden');
+    }
+
+    // --- 一覧テーブル描画 ---
+    function renderList() {
+      const thead = document.getElementById('table-head');
+      const tbody = document.getElementById('table-body');
+      thead.innerHTML = '';
+      tbody.innerHTML = '';
+
+      if (currentMode === 1) {
+        document.getElementById('list-title').textContent = "モード1: 酸・塩基 一覧";
+        thead.innerHTML = `<th>名称</th><th>化学式</th><th>分類</th><th>揮発性</th><th>解説</th>`;
+        mode1Data.forEach(d => {
+          tbody.innerHTML += `<tr><td>${d.name}</td><td>${d.formula}</td><td>${d.type}</td><td>${d.volatility}</td><td>${d.comment}</td></tr>`;
+        });
+      } else if (currentMode === 2) {
+        document.getElementById('list-title').textContent = "モード2: 塩の分類・性質 一覧";
+        thead.innerHTML = `<th>名称</th><th>化学式</th><th>塩の分類</th><th>液性</th><th>元の酸・塩基</th>`;
+        mode2Data.forEach(d => {
+          tbody.innerHTML += `<tr><td>${d.name}</td><td>${d.formula}</td><td>${d.category}</td><td>${d.acidity}</td><td>${d.parent}</td></tr>`;
+        });
+      } else if (currentMode === 3) {
+        document.getElementById('list-title').textContent = "モード3: 酸化物 一覧";
+        thead.innerHTML = `<th>名称</th><th>化学式</th><th>分類</th><th>水との反応</th><th>酸・塩基との反応</th>`;
+        mode3Data.forEach(d => {
+          const acidBaseFormatted = d.acidBaseReaction.replace(/\n/g, '<br>');
+          tbody.innerHTML += `<tr><td>${d.name}</td><td>${d.formula}</td><td>${d.category}</td><td>${d.waterReaction}</td><td>${acidBaseFormatted}</td></tr>`;
+        });
       }
     }
 
-    if (currentMode === "list") {
-      renderList();
-    } else {
-      resetQaDeck();
-      showNextQaQuestion();
-    }
-  }
-
-  // イベントリスナー設定
-  moduleAcidBaseBtn.addEventListener("click", () => setMainModule("acidBase"));
-  moduleSaltBtn.addEventListener("click", () => setMainModule("salt"));
-
-  qaReviewCheck.addEventListener("change", (e) => {
-    if (!currentQaItem) return;
-    if (e.target.checked) {
-      reviewSet.add(currentQaItem.id);
-    } else {
-      reviewSet.delete(currentQaItem.id);
-    }
-  });
-
-  btnListMode.addEventListener("click", () => {
-    currentMode = "list";
-    btnListMode.classList.add("active");
-    btnQaMode.classList.remove("active");
-    listModeArea.classList.remove("hidden");
-    qaModeArea.classList.add("hidden");
-    orderSelect.classList.add("hidden");
-    qaTypeAcidBase.classList.add("hidden");
-    qaTypeSalt.classList.add("hidden");
-    renderList();
-  });
-
-  btnQaMode.addEventListener("click", () => {
-    currentMode = "qa";
-    btnQaMode.classList.add("active");
-    btnListMode.classList.remove("active");
-    qaModeArea.classList.remove("hidden");
-    listModeArea.classList.add("hidden");
-    orderSelect.classList.remove("hidden");
-
-    if (activeModule === "acidBase") {
-      qaTypeAcidBase.classList.remove("hidden");
-      qaTypeSalt.classList.add("hidden");
-    } else {
-      qaTypeSalt.classList.remove("hidden");
-      qaTypeAcidBase.classList.add("hidden");
-    }
-
-    resetQaDeck();
-    showNextQaQuestion();
-  });
-
-  qaCard.addEventListener("click", () => {
-    if (!currentQaItem) return;
-    if (qaAnswerBox.classList.contains("hidden")) {
-      qaAnswerBox.classList.remove("hidden");
-      qaHint.classList.add("hidden");
-    }
-  });
-
-  nextQaBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    showNextQaQuestion();
-  });
-
-  qaTypeAcidBase.addEventListener("change", () => {
-    resetQaDeck();
-    showNextQaQuestion();
-  });
-
-  qaTypeSalt.addEventListener("change", () => {
-    resetQaDeck();
-    showNextQaQuestion();
-  });
-
-  orderSelect.addEventListener("change", () => {
-    resetQaDeck();
-    showNextQaQuestion();
-  });
-
-  categoryFilterAcidBase.addEventListener("change", () => {
-    if (currentMode === "list") renderList();
-    else { resetQaDeck(); showNextQaQuestion(); }
-  });
-
-  categoryFilterSalt.addEventListener("change", () => {
-    if (currentMode === "list") renderList();
-    else { resetQaDeck(); showNextQaQuestion(); }
-  });
-
-  searchInput.addEventListener("input", () => {
-    if (currentMode === "list") renderList();
-    else { resetQaDeck(); showNextQaQuestion(); }
-  });
-
-  // 初期化処理
-  checkVersionUpdate();
-  renderList();
-</script>
-
+    // 初期化
+    switchMode(1);
+  </script>
 </body>
 </html>

@@ -624,55 +624,132 @@
 
 <script>
   // ==========================================
-  // バージョン管理設定
+  // バージョン管理・更新履歴設定
   // ==========================================
   const CURRENT_VERSION = "1.4.2";
   const STORAGE_KEY_VERSION = "acid_base_app_version";
 
-  const UPDATE_LOGS = {
-    "1.4.2": "1問1答モードでの分類ラベル表示（酸・塩基、塩、酸化物）を修正しました。",
-    "1.4.1": "酸化物学習モードを追加しました。",
-    "1.4.0": "塩の分類・性質学習モードを追加しました。"
-  };
+  // 更新履歴データ（配列形式：新しい順）
+  const UPDATES_HISTORY = [
+    {
+      version: "1.4.2",
+      date: "2026-09-08",
+      changes: [
+        "1問1答モードでの分類ラベル表示（酸・塩基、塩、酸化物）を修正しました。"
+      ]
+    },
+    {
+      version: "1.4.1",
+      date: "2026-09-07",
+      changes: [
+        "酸化物学習モードを追加しました。"
+      ]
+    },
+    {
+      version: "1.4.0",
+      date: "2026-09-06",
+      changes: [
+        "塩の分類・性質学習モードを追加しました。"
+      ]
+    }
+  ];
 
   function checkVersionUpdate() {
     const savedVersion = localStorage.getItem(STORAGE_KEY_VERSION);
     const versionBadge = document.getElementById("versionBadge");
-    const updateModal = document.getElementById("updateModal");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalBody = document.getElementById("modalBody");
     const versionNotice = document.getElementById("versionNotice");
+    const versionNoticeTitle = document.getElementById("versionNoticeTitle");
     const versionNoticeDetail = document.getElementById("versionNoticeDetail");
-
-    versionBadge.textContent = `v${CURRENT_VERSION}`;
-
-    if (!savedVersion || savedVersion !== CURRENT_VERSION) {
-      modalTitle.textContent = "🎉 バージョンアップのお知らせ";
-      modalBody.textContent = `v${CURRENT_VERSION} に更新されました。\n\n【更新内容】\n` + (UPDATE_LOGS[CURRENT_VERSION] || "細かな修正とパフォーマンスの向上を行いました。");
-      updateModal.classList.remove("hidden");
+  
+    if (versionBadge) {
+      versionBadge.textContent = `v${CURRENT_VERSION}`;
     }
+  
+    // --- バージョンチェック判定 ---
+    if (!savedVersion) {
+      // 初回訪問時
+      if (versionNoticeTitle) versionNoticeTitle.textContent = "アプリへようこそ！";
+      if (versionNoticeDetail) versionNoticeDetail.textContent = `最新バージョン (v${CURRENT_VERSION}) をご利用いただけます。`;
+      if (versionNotice) versionNotice.classList.remove("hidden");
 
-    // バージョンバッジをクリックでいつでも更新履歴を表示可能
-    versionBadge.addEventListener("click", () => {
-      modalTitle.textContent = `バージョン情報 (v${CURRENT_VERSION})`;
-      let logText = "【更新履歴】\n";
-      for (const [ver, log] of Object.entries(UPDATE_LOGS)) {
-        logText += `・v${ver}: ${log}\n`;
-      }
-      modalBody.textContent = logText.trim();
-      updateModal.classList.remove("hidden");
-    });
-
-    document.getElementById("closeModalBtn").addEventListener("click", () => {
-      localStorage.setItem(STORAGE_KEY_VERSION, CURRENT_VERSION);
-      updateModal.classList.add("hidden");
-    });
-
-    document.getElementById("closeNoticeBtn").addEventListener("click", () => {
-      versionNotice.classList.add("hidden");
-    });
+      // 最新の更新内容を1つだけモーダル表示
+      openUpdateModal([UPDATES_HISTORY[0]]);
+  
+    } else if (compareVersions(CURRENT_VERSION, savedVersion) > 0) {
+      // バージョンアップ時（savedVersion より CURRENT_VERSION が新しい場合）
+      if (versionNoticeTitle) versionNoticeTitle.textContent = "アプリが更新されました！";
+      if (versionNoticeDetail) versionNoticeDetail.textContent = `v${savedVersion} から v${CURRENT_VERSION} にアップデートされました。`;
+      if (versionNotice) versionNotice.classList.remove("hidden");
+  
+      // 保存されているバージョンより新しい更新履歴をすべて取得
+      const newHistories = UPDATES_HISTORY.filter(item => {
+        return compareVersions(item.version, savedVersion) > 0;
+      });
+  
+      openUpdateModal(newHistories.length > 0 ? newHistories : [UPDATES_HISTORY[0]]);
+    }
+  
+    // --- イベントリスナーの登録 ---
+    const closeNoticeBtn = document.getElementById("closeNoticeBtn");
+    if (closeNoticeBtn) {
+      closeNoticeBtn.onclick = () => {
+        localStorage.setItem(STORAGE_KEY_VERSION, CURRENT_VERSION);
+        if (versionNotice) versionNotice.classList.add("hidden");
+      };
+    }
+  
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    if (closeModalBtn) {
+      closeModalBtn.onclick = () => {
+        localStorage.setItem(STORAGE_KEY_VERSION, CURRENT_VERSION);
+        const updateModal = document.getElementById("updateModal");
+        if (updateModal) updateModal.classList.add("hidden");
+      };
+    }
+  
+    // バッジクリックで全履歴表示
+    if (versionBadge) {
+      versionBadge.onclick = () => {
+        openUpdateModal(UPDATES_HISTORY);
+      };
+    }
   }
-
+  
+  // モーダル表示用共通関数
+  function openUpdateModal(historyData) {
+    const updateModal = document.getElementById("updateModal");
+    const modalBody = document.getElementById("modalBody");
+    if (!updateModal || !modalBody) return;
+  
+    let html = "";
+    historyData.forEach(item => {
+      html += `<div style="margin-bottom: 12px; border-bottom: 1px dashed #ccc; padding-bottom: 8px;">`;
+      html += `<strong>v${item.version}</strong> <span style="font-size: 11px; color: #666;">(${item.date || ''})</span>`;
+      html += `<ul style="margin: 4px 0 0 18px; padding: 0; font-size: 13px;">`;
+      item.changes.forEach(change => {
+        html += `<li>${change}</li>`;
+      });
+      html += `</ul></div>`;
+    });
+  
+    modalBody.innerHTML = html;
+    updateModal.classList.remove("hidden");
+  }
+  
+  // 簡易バージョン比較関数 (v1 > v2 => 1, v1 < v2 => -1, equal => 0)
+  function compareVersions(v1, v2) {
+    if (!v1 || !v2) return 0;
+    const p1 = v1.split('.').map(Number);
+    const p2 = v2.split('.').map(Number);
+    for (let i = 0; i < Math.max(p1.length, p2.length); i++) {
+      const num1 = p1[i] || 0;
+      const num2 = p2[i] || 0;
+      if (num1 > num2) return 1;
+      if (num1 < num2) return -1;
+    }
+    return 0;
+  }
+  
   // ==========================================
   // モード1：酸・塩基 データベース
   // ==========================================

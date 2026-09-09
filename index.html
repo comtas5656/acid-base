@@ -6,11 +6,11 @@
   <title>酸塩基暗記倶楽部</title>
 
   <!-- アイコン設定（PCタブ用 & iOSホーム画面用） -->
-  <link rel="icon" href="icon.png?v=1.4.2" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png?v=1.4.2">
+  <link rel="icon" href="icon.png?v=1.4.4" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png?v=1.4.4">
 
   <!-- PWA設定（Android / Chrome用） -->
-  <link rel="manifest" href="manifest.json?v=1.4.2">
+  <link rel="manifest" href="manifest.json?v=1.4.4">
   <meta name="theme-color" content="#2c3e50">
 
   <!-- iOS (Safari) 用のPWA全画面表示設定 -->
@@ -25,6 +25,7 @@
 
     :root {
       --primary-color: #2c3e50;
+      --secondary-color: #e67e22;
       /* 各モードの統一テーマカラー */
       --acidbase-color: #e67e22;
       --salt-color: #2980b9;
@@ -53,14 +54,15 @@
 
     /* バージョン更新通知バナー */
     .version-notice {
-      background-color: #e67e22;
+      background: linear-gradient(135deg, #d35400, #e67e22);
       color: #ffffff;
-      padding: 10px 14px;
+      padding: 8px 12px;
       border-radius: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       font-size: 13px;
     }
 
@@ -72,17 +74,23 @@
 
     .version-notice-title {
       font-weight: bold;
+      font-size: 14px;
     }
 
     .version-notice-close {
       background: rgba(255, 255, 255, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.4);
       color: #ffffff;
-      padding: 4px 12px;
+      padding: 4px 10px;
       border-radius: 4px;
       cursor: pointer;
       font-size: 12px;
       white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .version-notice-close:hover {
+      background: rgba(255, 255, 255, 0.35);
     }
 
     /* 更新内容お知らせモーダルダイアログ */
@@ -97,62 +105,71 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      padding: 16px;
     }
 
     .modal-content {
-      background-color: #ffffff;
-      border-radius: 12px;
+      background: #fff;
+      border-radius: 8px;
+      max-width: 500px;
       width: 90%;
-      max-width: 440px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      animation: modalFadeIn 0.3s ease-out;
       overflow: hidden;
     }
 
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .modal-header {
-      background: linear-gradient(135deg, #d35400, #e67e22);
-      color: #ffffff;
-      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--secondary-color);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .modal-title {
-      font-weight: bold;
       font-size: 16px;
-      margin: 0;
-    }
-
-    .modal-body {
-      padding: 16px 18px;
-      font-size: 14px;
-      color: #333333;
-      line-height: 1.5;
-      white-space: pre-wrap;
+      font-weight: bold;
+      color: var(--primary-color);
+      line-height: 1.4;
     }
 
     .modal-footer {
-      padding: 10px 18px 16px 18px;
-      display: flex;
-      justify-content: flex-end;
+      text-align: right;
+    }
+
+    .modal-body {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.6;
+      max-height: 60vh;
+      overflow-y: auto;
+      margin-bottom: 16px;
     }
 
     .modal-btn {
       background-color: var(--primary-color);
-      color: #ffffff;
+      color: #fff;
       border: none;
-      padding: 8px 20px;
+      padding: 6px 16px;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 14px;
       font-weight: bold;
-      transition: background-color 0.2s;
     }
 
     .modal-btn:hover {
-      background-color: #1a252f;
+      opacity: 0.9;
     }
 
     .header-container {
       text-align: center;
-      margin: 2px 0 4px 0;
+      margin: 2px 0 6px 0;
     }
 
     h1 {
@@ -476,9 +493,7 @@
       font-weight: bold;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     @media (max-width: 600px) {
       body { padding: 4px 6px; }
@@ -523,7 +538,7 @@
 
   <div class="header-container">
     <h1>酸塩基暗記倶楽部</h1>
-    <span class="version-badge" id="versionBadge" title="更新履歴を表示">v1.4.2</span>
+    <span class="version-badge" id="versionBadge" title="更新履歴を表示">v1.4.4</span>
   </div>
 
   <div class="main-module-tabs">
@@ -626,11 +641,25 @@
   // ==========================================
   // バージョン管理・更新履歴設定
   // ==========================================
-  const CURRENT_VERSION = "1.4.2";
+  const CURRENT_VERSION = "1.4.4";
   const STORAGE_KEY_VERSION = "acid_base_app_version";
 
   // 更新履歴データ（配列形式：新しい順）
   const UPDATES_HISTORY = [
+    {
+      version: "1.4.3",
+      date: "2026-09-10",
+      changes: [
+        "さらに細かな体裁を整えました。"
+      ]
+    },
+    {
+      version: "1.4.3",
+      date: "2026-09-10",
+      changes: [
+        "細かな体裁を整えました。"
+      ]
+    },
     {
       version: "1.4.2",
       date: "2026-09-08",

@@ -6,11 +6,11 @@
   <title>酸塩基暗記倶楽部</title>
 
   <!-- アイコン設定（PCタブ用 & iOSホーム画面用） -->
-  <link rel="icon" href="icon.png?v=1.4.4" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png?v=1.4.4">
+  <link rel="icon" href="icon.png?v=1.4.5" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png?v=1.4.5">
 
   <!-- PWA設定（Android / Chrome用） -->
-  <link rel="manifest" href="manifest.json?v=1.4.4">
+  <link rel="manifest" href="manifest.json?v=1.4.5">
   <meta name="theme-color" content="#2c3e50">
 
   <!-- iOS (Safari) 用のPWA全画面表示設定 -->
@@ -538,7 +538,7 @@
 
   <div class="header-container">
     <h1>酸塩基暗記倶楽部</h1>
-    <span class="version-badge" id="versionBadge" title="更新履歴を表示">v1.4.4</span>
+    <span class="version-badge" id="versionBadge" title="更新履歴を表示">v1.4.5</span>
   </div>
 
   <div class="main-module-tabs">
@@ -641,13 +641,20 @@
   // ==========================================
   // バージョン管理・更新履歴設定
   // ==========================================
-  const CURRENT_VERSION = "1.4.4";
+  const CURRENT_VERSION = "1.4.5";
   const STORAGE_KEY_VERSION = "acid_base_app_version";
 
   // 更新履歴データ（配列形式：新しい順）
   const UPDATES_HISTORY = [
     {
-      version: "1.4.3",
+      version: "1.4.5",
+      date: "2026-09-10",
+      changes: [
+        "塩の分類の解説を改めました。"
+      ]
+    },
+    {
+      version: "1.4.4",
       date: "2026-09-10",
       changes: [
         "さらに細かな体裁を整えました。"
@@ -928,152 +935,153 @@
   // ==========================================
   // モード2：塩のデータベース
   // ==========================================
-  const saltData = [
-    {
-      id: 101, name: "塩化カルシウム", formula: "CaCl₂", parentAcid: "HCl", parentBase: "Ca(OH)₂", category: "正塩", pHType: "中性", askPH: true,
-      comments: {
-        basic: "乾燥剤や融雪剤として利用される塩。",
-        parent: "HCl と Ca(OH)₂",
-        category: "組成中に H も OH も残っていないため正塩。",
-        pHType: "Ca²⁺にOH⁻はくっつかない（Ca(OH)₂＝強塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまり何も起こらないので中性。"
-      }
-    },
-    {
-      id: 102, name: "硝酸カリウム", formula: "KNO₃", parentAcid: "HNO₃", parentBase: "KOH", category: "正塩", pHType: "中性", askPH: true,
-      comments: {
-        basic: "黒色火薬の原料や肥料として使われる。",
-        parent: "HNO₃ と KOH",
-        category: "組成中に H も OH も残していないため正塩。",
-        pHType: "K⁺にOH⁻はくっつかない（KOH＝強塩基）。NO₃⁻にH⁺はくっつかない（HNO₃＝強酸）。つまり何も起こらないので中性。"
-      }
-    },
-    {
-      id: 103, name: "硫酸ナトリウム", formula: "Na₂SO₄", parentAcid: "H₂SO₄", parentBase: "NaOH", category: "正塩", pHType: "中性", askPH: true,
-      comments: {
-        basic: "入浴剤の成分などにも用いられる。",
-        parent: "H₂SO₄ と NaOH",
-        category: "組成中に H も OH も残していないため正塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。SO₄²⁻にH⁺はくっつかない（H₂SO₄＝強酸）。つまり何も起こらないので中性。"
-      }
-    },
-    {
-      id: 104, name: "硫酸水素ナトリウム", formula: "NaHSO₄", parentAcid: "H₂SO₄", parentBase: "NaOH", category: "酸性塩", pHType: "酸性", askPH: true,
-      comments: {
-        basic: "強酸の H が1つ残った酸性塩。",
-        parent: "H₂SO₄ と NaOH",
-        category: "酸の H が残っているため酸性塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。HSO₄⁻はさらに電離してH⁺を出す（H₂SO₄＝強酸）。つまりH⁺が余るので酸性。"
-      }
-    },
-    {
-      id: 105, name: "炭酸カルシウム", formula: "CaCO₃", parentAcid: "H₂CO₃", parentBase: "Ca(OH)₂", category: "正塩", pHType: "水に難溶（考慮しない）", askPH: false,
-      comments: {
-        basic: "貝殻や大理石、石灰石の主成分。",
-        parent: "H₂CO₃ と Ca(OH)₂",
-        category: "組成中に H も OH も残していないため正塩。",
-        pHType: "水にほとんど溶けない（難溶性）ため、水溶液の液性は考えない。"
-      }
-    },
-    {
-      id: 106, name: "炭酸水素カルシウム", formula: "Ca(HCO₃)₂", parentAcid: "H₂CO₃", parentBase: "Ca(OH)₂", category: "酸性塩", pHType: "弱塩基性", askPH: true,
-      comments: {
-        basic: "鍾乳洞の形成に関わる、水に溶ける塩。",
-        parent: "H₂CO₃ と Ca(OH)₂",
-        category: "酸の H が残っているため酸性塩。",
-        pHType: "Ca²⁺にOH⁻はくっつかない（Ca(OH)₂＝強塩基）。HCO₃⁻にH⁺はくっつく（H₂CO₃＝弱酸）。つまりOH⁻が余るので塩基性。"
-      }
-    },
-    {
-      id: 107, name: "塩化アンモニウム", formula: "NH₄Cl", parentAcid: "HCl", parentBase: "NH₃", category: "正塩", pHType: "弱酸性", askPH: true,
-      comments: {
-        basic: "乾電池の電解液などに使われる。",
-        parent: "HCl と NH₃",
-        category: "組成中に H も OH も残していないため正塩。",
-        pHType: "NH₄⁺にOH⁻はくっつく（NH₃＝弱塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまりH⁺が余るので酸性。"
-      }
-    },
-    {
-      id: 108, name: "酢酸ナトリウム", formula: "CH₃COONa", parentAcid: "CH₃COOH", parentBase: "NaOH", category: "正塩", pHType: "弱塩基性", askPH: true,
-      comments: {
-        basic: "エコカイロ（発熱体）などにも使われる。",
-        parent: "CH₃COOH と NaOH",
-        category: "組成中に H も OH も残していないため正塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。CH₃COO⁻にH⁺はくっつく（CH₃COOH＝弱酸）。つまりOH⁻が余るので塩基性。"
-      }
-    },
-    {
-      id: 109, name: "塩化ナトリウム", formula: "NaCl", parentAcid: "HCl", parentBase: "NaOH", category: "正塩", pHType: "中性", askPH: true,
-      comments: {
-        basic: "食塩の主成分。代表的な塩。",
-        parent: "HCl と NaOH",
-        category: "組成中に H も OH も残していないため正塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまり何も起こらないので中性。"
-      }
-    },
-    {
-      id: 110, name: "フッ化カルシウム", formula: "CaF₂", parentAcid: "HF", parentBase: "Ca(OH)₂", category: "正塩", pHType: "水に難溶（考慮しない）", askPH: false,
-      comments: {
-        basic: "鉱物の「ホタル石」の主成分。",
-        parent: "HF と Ca(OH)₂",
-        category: "組成中に H も OH も残していないため正塩。",
-        pHType: "水にほぼ溶けない（難溶性）ため、水溶液の液性は考えない。"
-      }
-    },
-    {
-      id: 111, name: "炭酸ナトリウム", formula: "Na₂CO₃", parentAcid: "H₂CO₃", parentBase: "NaOH", category: "正塩", pHType: "弱塩基性", askPH: true,
-      comments: {
-        basic: "ガラスの原料などに使われる（無水物）。",
-        parent: "H₂CO₃ と NaOH",
-        category: "組成中に H も OH も残していないため正塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。CO₃²⁻にH⁺はくっつく（H₂CO₃＝弱酸）。つまりOH⁻が余るので塩基性。"
-      }
-    },
-    {
-      id: 112, name: "炭酸水素ナトリウム", formula: "NaHCO₃", parentAcid: "H₂CO₃", parentBase: "NaOH", category: "酸性塩", pHType: "弱塩基性", askPH: true,
-      comments: {
-        basic: "重曹（ベーキングパウダー）の成分。",
-        parent: "H₂CO₃ と NaOH",
-        category: "酸の H が残っているため酸性塩。",
-        pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。HCO₃⁻にH⁺はくっつく（H₂CO₃＝弱酸）。つまりOH⁻が余るので塩基性。"
-      }
-    },
-    {
-      id: 113, name: "硫酸銅(II)", formula: "CuSO₄", parentAcid: "H₂SO₄", parentBase: "Cu(OH)₂", category: "正塩", pHType: "弱酸性", askPH: true,
-      comments: {
-        basic: "無水物は白色、5水和物（CuSO₄·5H₂O）は青色の結晶。",
-        parent: "H₂SO₄ と Cu(OH)₂",
-        category: "組成中に H も OH も残していないため正塩。",
-        pHType: "Cu²⁺にOH⁻はくっつく（Cu(OH)₂＝弱塩基）。SO₄²⁻にH⁺はくっつかない（H₂SO₄＝強酸）。つまりH⁺が余るので酸性。"
-      }
-    },
-    {
-      id: 114, name: "硫化鉄(II)", formula: "FeS", parentAcid: "H₂S", parentBase: "Fe(OH)₂", category: "正塩", pHType: "水に難溶（考慮しない）", askPH: false,
-      comments: {
-        basic: "黒色沈殿。希硫酸を加えると H₂S 気体が発生する。",
-        parent: "H₂S と Fe(OH)₂",
-        category: "組成中に H も OH も残していないため正塩。",
-        pHType: "水に全く溶けない（難溶性）ため、水溶液の液性は考えない。"
-      }
-    },
-    {
-      id: 115, name: "酢酸アンモニウム", formula: "CH₃COONH₄", parentAcid: "CH₃COOH", parentBase: "NH₃", category: "正塩", pHType: "ほぼ中性（問われない）", askPH: false,
-      comments: {
-        basic: "弱酸と弱塩基からなる塩の代表例。",
-        parent: "CH₃COOH と NH₃",
-        category: "組成中に H も OH も残していないため正塩。",
-        pHType: "NH₄⁺にOH⁻がくっつき、CH₃COO⁻にH⁺がくっつく。互いに奪うH⁺とOH⁻の量がほぼ等しいため、ほぼ中性。"
-      }
-    },
-    {
-      id: 116, name: "塩基性塩化マグネシウム", formula: "MgCl(OH)", parentAcid: "HCl", parentBase: "Mg(OH)₂", category: "塩基性塩", pHType: "弱酸性", askPH: true,
-      comments: {
-        basic: "塩基の OH が残った塩基性塩の代表例。",
-        parent: "HCl と Mg(OH)₂",
-        category: "塩基の OH が残っているため塩基性塩。",
-        pHType: "Mg²⁺にOH⁻はくっつく（Mg(OH)₂＝弱塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまりH⁺が余るので酸性。"
-      }
+const saltData = [
+  {
+    id: 101, name: "塩化カルシウム", formula: "CaCl₂", parentAcid: "HCl", parentBase: "Ca(OH)₂", category: "正塩", pHType: "中性", askPH: true,
+    comments: {
+      basic: "乾燥剤や融雪剤として利用される塩。",
+      parent: "CaCl₂をつくるイオンはCl⁻とCa²⁺。\nCl⁻ → HCl\nCa²⁺ → Ca(OH)₂",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "Ca²⁺にOH⁻はくっつかない（Ca(OH)₂＝強塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまり何も起こらないので中性。"
     }
-  ];
+  },
+  {
+    id: 102, name: "硝酸カリウム", formula: "KNO₃", parentAcid: "HNO₃", parentBase: "KOH", category: "正塩", pHType: "中性", askPH: true,
+    comments: {
+      basic: "黒色火薬の原料や肥料として使われる。",
+      parent: "KNO₃をつくるイオンはNO₃⁻とK⁺。\nNO₃⁻ → HNO₃\nK⁺ → KOH",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "K⁺にOH⁻はくっつかない（KOH＝強塩基）。NO₃⁻にH⁺はくっつかない（HNO₃＝強酸）。つまり何も起こらないので中性。"
+    }
+  },
+  {
+    id: 103, name: "硫酸ナトリウム", formula: "Na₂SO₄", parentAcid: "H₂SO₄", parentBase: "NaOH", category: "正塩", pHType: "中性", askPH: true,
+    comments: {
+      basic: "入浴剤の成分などにも用いられる。",
+      parent: "Na₂SO₄をつくるイオンはSO₄²⁻とNa⁺。\nSO₄²⁻ → H₂SO₄\nNa⁺ → NaOH",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。SO₄²⁻にH⁺はくっつかない（H₂SO₄＝強酸）。つまり何も起こらないので中性。"
+    }
+  },
+  {
+    id: 104, name: "硫酸水素ナトリウム", formula: "NaHSO₄", parentAcid: "H₂SO₄", parentBase: "NaOH", category: "酸性塩", pHType: "酸性", askPH: true,
+    comments: {
+      basic: "強酸の H が1つ残った酸性塩。",
+      parent: "NaHSO₄をつくるイオンはHSO₄⁻とNa⁺。\nHSO₄⁻ → H₂SO₄\nNa⁺ → NaOH",
+      category: "陰イオンに H が残っているため酸性塩。",
+      pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。HSO₄⁻はさらに電離してH⁺を出す（H₂SO₄＝強酸）。つまりH⁺が余るので酸性。"
+    }
+  },
+  {
+    id: 105, name: "炭酸カルシウム", formula: "CaCO₃", parentAcid: "H₂CO₃", parentBase: "Ca(OH)₂", category: "正塩", pHType: "水に難溶（考慮しない）", askPH: false,
+    comments: {
+      basic: "貝殻や大理石、石灰石の主成分。",
+      parent: "CaCO₃をつくるイオンはCO₃²⁻とCa²⁺。\nCO₃²⁻ → H₂CO₃\nCa²⁺ → Ca(OH)₂",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "水にほとんど溶けない（難溶性）ため、水溶液の液性は考えない。"
+    }
+  },
+  {
+    id: 106, name: "炭酸水素カルシウム", formula: "Ca(HCO₃)₂", parentAcid: "H₂CO₃", parentBase: "Ca(OH)₂", category: "酸性塩", pHType: "弱塩基性", askPH: true,
+    comments: {
+      basic: "鍾乳洞の形成に関わる、水に溶ける塩。",
+      parent: "Ca(HCO₃)₂をつくるイオンはHCO₃⁻とCa²⁺。\nHCO₃⁻ → H₂CO₃\nCa²⁺ → Ca(OH)₂",
+      category: "陰イオンに H が残っているため酸性塩。",
+      pHType: "Ca²⁺にOH⁻はくっつかない（Ca(OH)₂＝強塩基）。HCO₃⁻にH⁺はくっつく（H₂CO₃＝弱酸）。つまりOH⁻が余るので塩基性。"
+    }
+  },
+  {
+    id: 107, name: "塩化アンモニウム", formula: "NH₄Cl", parentAcid: "HCl", parentBase: "NH₃", category: "正塩", pHType: "弱酸性", askPH: true,
+    comments: {
+      basic: "乾電池の電解液などに使われる。",
+      parent: "NH₄ClをつくるイオンはCl⁻とNH₄⁺。\nCl⁻ → HCl\nNH₄⁺ → NH₃",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "NH₄⁺にOH⁻はくっつく（NH₃＝弱塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまりH⁺が余るので酸性。"
+    }
+  },
+  {
+    id: 108, name: "酢酸ナトリウム", formula: "CH₃COONa", parentAcid: "CH₃COOH", parentBase: "NaOH", category: "正塩", pHType: "弱塩基性", askPH: true,
+    comments: {
+      basic: "エコカイロ（発熱体）などにも使われる。",
+      parent: "CH₃COONaをつくるイオンはCH₃COO⁻とNa⁺。\nCH₃COO⁻ → CH₃COOH\nNa⁺ → NaOH",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。CH₃COO⁻にH⁺はくっつく（CH₃COOH＝弱酸）。つまりOH⁻が余るので塩基性。"
+    }
+  },
+  {
+    id: 109, name: "塩化ナトリウム", formula: "NaCl", parentAcid: "HCl", parentBase: "NaOH", category: "正塩", pHType: "中性", askPH: true,
+    comments: {
+      basic: "食塩の主成分。代表的な塩。",
+      parent: "NaClをつくるイオンはCl⁻とNa⁺。\nCl⁻ → HCl\nNa⁺ → NaOH",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまり何も起こらないので中性。"
+    }
+  },
+  {
+    id: 110, name: "フッ化カルシウム", formula: "CaF₂", parentAcid: "HF", parentBase: "Ca(OH)₂", category: "正塩", pHType: "水に難溶（考慮しない）", askPH: false,
+    comments: {
+      basic: "鉱物の「ホタル石」の主成分。",
+      parent: "CaF₂をつくるイオンはF⁻とCa²⁺。\nF⁻ → HF\nCa²⁺ → Ca(OH)₂",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "水にほぼ溶けない（難溶性）ため、水溶液の液性は考えない。"
+    }
+  },
+  {
+    id: 111, name: "炭酸ナトリウム", formula: "Na₂CO₃", parentAcid: "H₂CO₃", parentBase: "NaOH", category: "正塩", pHType: "弱塩基性", askPH: true,
+    comments: {
+      basic: "ガラスの原料などに使われる（無水物）。",
+      parent: "Na₂CO₃をつくるイオンはCO₃²⁻とNa⁺。\nCO₃²⁻ → H₂CO₃\nNa⁺ → NaOH",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。CO₃²⁻にH⁺はくっつく（H₂CO₃＝弱酸）。つまりOH⁻が余るので塩基性。"
+    }
+  },
+  {
+    id: 112, name: "炭酸水素ナトリウム", formula: "NaHCO₃", parentAcid: "H₂CO₃", parentBase: "NaOH", category: "酸性塩", pHType: "弱塩基性", askPH: true,
+    comments: {
+      basic: "重曹（ベーキングパウダー）の成分。",
+      parent: "NaHCO₃をつくるイオンはHCO₃⁻とNa⁺。\nHCO₃⁻ → H₂CO₃\nNa⁺ → NaOH",
+      category: "陰イオンに H が残っているため酸性塩。",
+      pHType: "Na⁺にOH⁻はくっつかない（NaOH＝強塩基）。HCO₃⁻にH⁺はくっつく（H₂CO₃＝弱酸）。つまりOH⁻が余るので塩基性。"
+    }
+  },
+  {
+    id: 113, name: "硫酸銅(II)", formula: "CuSO₄", parentAcid: "H₂SO₄", parentBase: "Cu(OH)₂", category: "正塩", pHType: "弱酸性", askPH: true,
+    comments: {
+      basic: "無水物は白色、5水和物（CuSO₄·5H₂O）は青色の結晶。",
+      parent: "CuSO₄をつくるイオンはSO₄²⁻とCu²⁺。\nSO₄²⁻ → H₂SO₄\nCu²⁺ → Cu(OH)₂",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "Cu²⁺にOH⁻はくっつく（Cu(OH)₂＝弱塩基）。SO₄²⁻にH⁺はくっつかない（H₂SO₄＝強酸）。つまりH⁺が余るので酸性。"
+    }
+  },
+  {
+    id: 114, name: "硫化鉄(II)", formula: "FeS", parentAcid: "H₂S", parentBase: "Fe(OH)₂", category: "正塩", pHType: "水に難溶（考慮しない）", askPH: false,
+    comments: {
+      basic: "黒色沈殿。希硫酸を加えると H₂S 気体が発生する。",
+      parent: "FeSをつくるイオンはS²⁻とFe²⁺。\nS²⁻ → H₂S\nFe²⁺ → Fe(OH)₂",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "水に全く溶けない（難溶性）ため、水溶液の液性は考えない。"
+    }
+  },
+  {
+    id: 115, name: "酢酸アンモニウム", formula: "CH₃COONH₄", parentAcid: "CH₃COOH", parentBase: "NH₃", category: "正塩", pHType: "ほぼ中性（問われない）", askPH: false,
+    comments: {
+      basic: "弱酸と弱塩基からなる塩の代表例。",
+      parent: "CH₃COONH₄をつくるイオンはCH₃COO⁻とNH₄⁺。\nCH₃COO⁻ → CH₃COOH\nNH₄⁺ → NH₃",
+      category: "陰イオンに H が残らず、陽イオンに OH が残っていないため正塩。",
+      pHType: "NH₄⁺にOH⁻がくっつき、CH₃COO⁻にH⁺がくっつく。互いに奪うH⁺とOH⁻の量がほぼ等しいため、ほぼ中性。"
+    }
+  },
+  {
+    id: 116, name: "塩基性塩化マグネシウム", formula: "MgCl(OH)", parentAcid: "HCl", parentBase: "Mg(OH)₂", category: "塩基性塩", pHType: "弱酸性", askPH: true,
+    comments: {
+      basic: "塩基の OH が残った塩基性塩の代表例。",
+      parent: "MgCl(OH)をつくるイオンはCl⁻・OH⁻・Mg²⁺。\nCl⁻ → HCl\nOH⁻とMg²⁺ → Mg(OH)₂",
+      category: "陽イオンに OH が残っているため塩基性塩。",
+      pHType: "Mg²⁺にOH⁻はくっつく（Mg(OH)₂＝弱塩基）。Cl⁻にH⁺はくっつかない（HCl＝強酸）。つまりH⁺が余るので酸性。"
+    }
+  }
+];
+
 
   // ==========================================
   // モード3：酸化物 データベース
